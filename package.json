@@ -1,0 +1,30 @@
+{
+  "name": "vocational_course",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon server.js",
+    "setup-production": "npm run install-client && npm run build-client && npm install",
+    "install-client": "cd client && npm install",
+    "build-client": "cd client && npm run build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@getbrevo/brevo": "^1.0.1",
+    "cloudinary": "^1.41.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "exceljs": "^4.4.0",
+    "express": "^4.18.2",
+    "express-fileupload": "^1.4.3",
+    "mongoose": "^8.0.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "proxy": "http://localhost:5000"
+}
