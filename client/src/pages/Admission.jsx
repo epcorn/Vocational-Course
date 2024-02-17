@@ -1,14 +1,13 @@
-import { useState } from "react";
+/* eslint-disable jsx-a11y/label-has-associated-control */
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { toast } from "react-toastify";
 import Loading from "../components/Loading";
-import { useNavigate } from "react-router-dom";
 
 const Admission = () => {
   const [next, setNext] = useState("Personal Information");
-  const navigate = useNavigate();
   const [isLoading, setLoading] = useState(false);
   const [form, setForm] = useState({
     firstName: "",
@@ -37,6 +36,8 @@ const Admission = () => {
     board10: "",
     percentage12: "",
     board12: "",
+    graduationPercentage: "",
+    graduationUnivercity: "",
     lastUniversity: "",
     passingYear: "",
     rollNo: "",
@@ -49,24 +50,81 @@ const Admission = () => {
     marksheet10: [],
     marksheet12: [],
     vocationalCerti: [],
+    donePersonal: false,
+    doneEducation: false,
+    doneUpload: false,
+    donePayment: false
   });
 
-  const handlePersonalInfo = (e) => {
+  const handleClick = (e) => {
     e.preventDefault();
+
+    if (e.target.name === "next") {
+      setNext("Upload");
+    }
+    if (e.target.name === "prev") {
+      setNext("Personal Information");
+    }
+
+  };
+
+  const handlePersonalForm = (e) => {
+    e.preventDefault();
+    setForm((prev) => ({
+      ...prev,
+      donePersonal: true,
+    }));
     setNext("Education");
   };
 
-  const handleEducationInfo = (e) => {
+  const handleEducationForm = (e) => {
     e.preventDefault();
+    setForm((prev) => ({
+      ...prev,
+      doneEducation: true,
+    }));
     setNext("Upload");
+  };
+
+
+  const sendPostRequest = async () => {
+    try {
+      const response = await axios.post('/api/student/personalInfo', {
+        form
+      });
+      console.log('Response:', response.data);
+    } catch (error) {
+      console.error('Error:', error.message);
+    }
+  };
+
+  // Use useEffect hook to run the function every 5 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      sendPostRequest();
+    }, 5000);
+
+    // Clean up the interval to avoid memory leaks
+    return () => clearInterval(interval);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [form]); // Empty dependency array ensures it only runs once on component mount
+
+
+
+
+  const handleToEducation = (e) => {
+    e.preventDefault();
+    if (e.target.name === "prev") {
+      setNext("Education");
+    }
   };
 
   const submitApplication = async () => {
     setLoading(true);
     try {
+      // eslint-disable-next-line no-unused-vars
       const res = await axios.post(
-        "/api/studentRegister",
-        form
+        "/api/student/studentRegister",
       );
 
       setLoading(false);
@@ -83,13 +141,17 @@ const Admission = () => {
       !form.marksheet10.length ||
       !form.marksheet12.length ||
       !form.aadharCard.length ||
-      !form.castCertificate.length ||
-      !form.passportPics.length
+      !form.passportPics.length ||
+      form.caste != "General" && !form.castCertificate.length
     ) {
+
       toast.error("Please upload all the required documents");
       return;
     }
-
+    setForm((prev) => ({
+      ...prev,
+      doneUpload: true,
+    }));
     setNext("Payment");
   };
 
@@ -104,6 +166,7 @@ const Admission = () => {
 
       const res = await axios.post("/api/documentUpload", form);
 
+
       setForm((prev) => ({ ...prev, [docName]: res.data.imageLinks }));
       setLoading(false);
       toast.success("Document Uploaded");
@@ -114,6 +177,7 @@ const Admission = () => {
     }
   };
 
+
   return (
     <div className="m-5">
       {isLoading && <Loading />}
@@ -121,44 +185,45 @@ const Admission = () => {
       <div className="flex items-center justify-center">
         <div className="w-full px-8 xl:w-10/12">
           <div className="bg-gray-100 py-5">
+
             <h1 className="text-c#c026d3 pb-5 text-center text-lg font-semibold text-teal-700">
               Application form for admission to Pest Control Application
               Technology
             </h1>
-            <div className="flex flex-wrap items-center justify-center">
+            <div className={`flex flex-wrap items-center justify-center`}>
               <div className="relative mt-4 h-16 w-52 md:mt-0">
                 <img
-                  src="https://i.ibb.co/DwNs7zG/Steps.png"
+                  src={`${form.donePersonal ? "https://i.ibb.co/wNZ4nzy/Steps2.png" : "https://i.ibb.co/c2k4Gbr/Steps3.png"}`}
                   alt="step1"
                   className="h-full w-full"
                 />
-                <div className="absolute inset-0 m-0 flex w-full flex-col items-center justify-center px-6">
-                  <p className="w-full text-sm font-medium leading-4 text-white">
+                <div className={`absolute inset-0 m-0 flex w-full flex-col items-center justify-center px-6 ${form.donePersonal}`}>
+                  <p className="w-full text-sm font-medium leading-4">
                     Sign Up
                   </p>
-                  <p className="mt-1 w-full text-xs leading-none text-white">
+                  <p className="mt-1 w-full text-xs leading-none">
                     Personal information
                   </p>
                 </div>
               </div>
               <div className="relative mt-4 h-16 w-52 md:mt-0">
                 <img
-                  src="https://i.ibb.co/wNZ4nzy/Steps2.png"
+                  src={`${form.doneEducation ? "https://i.ibb.co/wNZ4nzy/Steps2.png" : "https://i.ibb.co/c2k4Gbr/Steps3.png"}`}
                   alt="step2"
                   className="h-full w-full"
                 />
                 <div className="absolute inset-0 m-0 flex w-full flex-col items-center justify-center px-6">
-                  <p className="w-full text-sm font-medium leading-4 text-indigo-800">
+                  <p className="w-full text-sm font-medium leading-4 ">
                     Education
                   </p>
-                  <p className="mt-1 w-full text-xs leading-none text-indigo-800">
+                  <p className="mt-1 w-full text-xs leading-none ">
                     Educational details
                   </p>
                 </div>
               </div>
               <div className="relative mt-4 h-16 w-52 md:mt-0">
                 <img
-                  src="https://i.ibb.co/c2k4Gbr/Steps3.png"
+                  src={`${form.doneUpload ? "https://i.ibb.co/wNZ4nzy/Steps2.png" : "https://i.ibb.co/c2k4Gbr/Steps3.png"}`}
                   alt="step3"
                   className="h-full w-full"
                 />
@@ -173,7 +238,7 @@ const Admission = () => {
               </div>
               <div className="relative mt-4 h-16 w-52 lg:mt-0">
                 <img
-                  src="https://i.ibb.co/XCdjrhm/Steps4.png"
+                  src={`${form.donePayment ? "https://i.ibb.co/wNZ4nzy/Steps2.png" : "https://i.ibb.co/c2k4Gbr/Steps3.png"}`}
                   alt="step4"
                   className="h-full w-full"
                 />
@@ -190,7 +255,7 @@ const Admission = () => {
           </div>
           <div className="xl:px-24">
             {next === "Personal Information" ? (
-              <form onSubmit={handlePersonalInfo}>
+              <form onSubmit={handlePersonalForm} >
                 <h1 className="my-8 pr-2 text-center text-2xl font-medium leading-5 text-gray-800">
                   Personal Information
                 </h1>
@@ -210,9 +275,11 @@ const Admission = () => {
                         <input
                           required
                           type="text"
+                          value={form.firstName}
                           className="mt-3 w-full rounded border border-gray-200 bg-gray-100 p-3 text-sm font-medium leading-none text-gray-800 focus:border-gray-600 focus:outline-none"
                           aria-labelledby="firstName"
                           placeholder="John"
+                          maxLength={30}
                           onChange={(e) =>
                             setForm((prev) => ({
                               ...prev,
@@ -234,6 +301,7 @@ const Admission = () => {
                         <input
                           required
                           type="text"
+                          value={form.middleName}
                           className="mt-3 w-full rounded border border-gray-200 bg-gray-100 p-3 text-sm font-medium leading-none text-gray-800 focus:border-gray-600 focus:outline-none"
                           aria-labelledby="middleName"
                           placeholder="Michel"
@@ -258,6 +326,7 @@ const Admission = () => {
                         <input
                           required
                           type="text"
+                          value={form.lastName}
                           className="mt-3 w-full rounded border border-gray-200 bg-gray-100 p-3 text-sm font-medium leading-none text-gray-800 focus:border-gray-600 focus:outline-none"
                           aria-labelledby="lastName"
                           placeholder="Doe"
@@ -281,6 +350,7 @@ const Admission = () => {
                         <input
                           required
                           type="email"
+                          value={form.email}
                           className="mt-3 w-full rounded border border-gray-200 bg-gray-100 p-3 text-sm font-medium leading-none text-gray-800 focus:border-gray-600 focus:outline-none"
                           aria-labelledby="emailAddress"
                           placeholder="youremail@example.com"
@@ -301,7 +371,8 @@ const Admission = () => {
                         </label>
                         <input
                           required
-                          type="name"
+                          type="number"
+                          value={form.phone}
                           className="mt-3 w-full rounded border border-gray-200 bg-gray-100 p-3 text-sm font-medium leading-none text-gray-800 focus:border-gray-600 focus:outline-none"
                           aria-labelledby="phone"
                           placeholder="123-1234567"
@@ -318,10 +389,11 @@ const Admission = () => {
                           Alternate Phone number
                         </label>
                         <input
-                          type="name"
+                          type="number"
                           className="mt-3 w-full rounded border border-gray-200 bg-gray-100 p-3 text-sm font-medium leading-none text-gray-800 focus:border-gray-600 focus:outline-none"
                           aria-labelledby="phone"
                           placeholder="123-1234567"
+                          value={form.alternatePhone}
                           onChange={(e) =>
                             setForm((prev) => ({
                               ...prev,
@@ -342,6 +414,7 @@ const Admission = () => {
                         <input
                           required
                           type="date"
+                          value={form.dob}
                           className="mt-3 w-full rounded border border-gray-200 bg-gray-100 p-3 text-sm font-medium leading-none text-gray-800 focus:border-gray-600 focus:outline-none"
                           aria-labelledby="emailAddress"
                           onChange={(e) =>
@@ -365,6 +438,7 @@ const Admission = () => {
                         <select
                           required
                           type="select"
+                          value={form.gender}
                           className="mt-3 w-full rounded border border-gray-200 bg-gray-100 p-3 text-sm font-medium leading-none text-gray-800 focus:border-gray-600 focus:outline-none"
                           aria-labelledby="emailAddress"
                           placeholder="Select"
@@ -387,6 +461,7 @@ const Admission = () => {
                         </label>
                         <input
                           type="text"
+                          value={form.blood}
                           className="mt-3 w-full rounded border border-gray-200 bg-gray-100 p-3 text-sm font-medium leading-none text-gray-800 focus:border-gray-600 focus:outline-none"
                           placeholder="A+"
                           onChange={(e) =>
@@ -406,6 +481,7 @@ const Admission = () => {
                         </label>
                         <select
                           type="select"
+                          value={form.disability}
                           className="mt-3 w-full rounded border border-gray-200 bg-gray-100 p-3 text-sm font-medium leading-none text-gray-800 focus:border-gray-600 focus:outline-none"
                           aria-labelledby="emailAddress"
                           placeholder="Select"
@@ -435,9 +511,11 @@ const Admission = () => {
                         <input
                           required
                           type="text"
+                          value={form.nationality}
                           className="mt-3 w-full rounded border border-gray-200 bg-gray-100 p-3 text-sm font-medium leading-none text-gray-800 focus:border-gray-600 focus:outline-none"
                           aria-labelledby="firstName"
                           placeholder="Indian"
+                          defaultValue="Indian"
                           onChange={(e) =>
                             setForm((prev) => ({
                               ...prev,
@@ -459,6 +537,7 @@ const Admission = () => {
                         <input
                           required
                           type="text"
+                          value={form.religion}
                           className="mt-3 w-full rounded border border-gray-200 bg-gray-100 p-3 text-sm font-medium leading-none text-gray-800 focus:border-gray-600 focus:outline-none"
                           aria-labelledby="firstName"
                           onChange={(e) =>
@@ -481,6 +560,7 @@ const Admission = () => {
                           className="mt-3 w-full rounded border border-gray-200 bg-gray-100 p-3 text-sm font-medium leading-none text-gray-800 focus:border-gray-600 focus:outline-none"
                           aria-labelledby="emailAddress"
                           placeholder="Select"
+                          value={form.caste}
                           onChange={(e) =>
                             setForm((prev) => ({
                               ...prev,
@@ -505,6 +585,7 @@ const Admission = () => {
                         </label>
                         <input
                           type="text"
+                          value={form.fatherName}
                           className="mt-3 w-full rounded border border-gray-200 bg-gray-100 p-3 text-sm font-medium leading-none text-gray-800 focus:border-gray-600 focus:outline-none"
                           aria-labelledby="firstName"
                           placeholder="John Doe"
@@ -525,6 +606,7 @@ const Admission = () => {
                         </label>
                         <input
                           type="text"
+                          value={form.motherName}
                           className="mt-3 w-full rounded border border-gray-200 bg-gray-100 p-3 text-sm font-medium leading-none text-gray-800 focus:border-gray-600 focus:outline-none"
                           aria-labelledby="middleName"
                           placeholder="John Doe"
@@ -545,6 +627,7 @@ const Admission = () => {
                         </label>
                         <input
                           type="text"
+                          value={form.income}
                           className="mt-3 w-full rounded border border-gray-200 bg-gray-100 p-3 text-sm font-medium leading-none text-gray-800 focus:border-gray-600 focus:outline-none"
                           aria-labelledby="middleName"
                           placeholder="In Rupees"
@@ -567,6 +650,7 @@ const Admission = () => {
                         </label>
                         <input
                           type="text"
+                          value={form.guardianName}
                           className="mt-3 w-full rounded border border-gray-200 bg-gray-100 p-3 text-sm font-medium leading-none text-gray-800 focus:border-gray-600 focus:outline-none"
                           aria-labelledby="firstName"
                           placeholder="John Doe"
@@ -587,6 +671,7 @@ const Admission = () => {
                         </label>
                         <input
                           type="text"
+                          value={form.relationGuardian}
                           className="mt-3 w-full rounded border border-gray-200 bg-gray-100 p-3 text-sm font-medium leading-none text-gray-800 focus:border-gray-600 focus:outline-none"
                           aria-labelledby="middleName"
                           placeholder="Son/Daughter"
@@ -606,7 +691,8 @@ const Admission = () => {
                           Annual Income Of Guardian
                         </label>
                         <input
-                          type="text"
+                          type="number"
+                          value={form.incomeGuardian}
                           className="mt-3 w-full rounded border border-gray-200 bg-gray-100 p-3 text-sm font-medium leading-none text-gray-800 focus:border-gray-600 focus:outline-none"
                           aria-labelledby="middleName"
                           placeholder="In Rupees"
@@ -633,6 +719,7 @@ const Admission = () => {
                         <textarea
                           required
                           type="name"
+                          value={form.address}
                           className="mt-3 w-full rounded border border-gray-200 bg-gray-100 p-3 text-sm font-medium leading-none text-gray-800 focus:border-gray-600 focus:outline-none"
                           aria-labelledby="firstName"
                           placeholder="Your Full Address"
@@ -658,6 +745,7 @@ const Admission = () => {
                         <input
                           required
                           type="name"
+                          value={form.city}
                           className="mt-3 w-full rounded border border-gray-200 bg-gray-100 p-3 text-sm font-medium leading-none text-gray-800 focus:border-gray-600 focus:outline-none"
                           aria-labelledby="firstName"
                           placeholder="Mumbai"
@@ -681,10 +769,13 @@ const Admission = () => {
                         </label>
                         <input
                           required
-                          type="name"
+                          type="number"
+                          value={form.pincode}
                           className="mt-3 w-full rounded border border-gray-200 bg-gray-100 p-3 text-sm font-medium leading-none text-gray-800 focus:border-gray-600 focus:outline-none"
                           aria-labelledby="firstName"
                           placeholder="400054"
+                          pattern="[0-9]{6}"
+                          maxLength="6"
                           onChange={(e) =>
                             setForm((prev) => ({
                               ...prev,
@@ -694,17 +785,20 @@ const Admission = () => {
                         />
                       </div>
                     </div>
-                    <button
-                      type="submit"
-                      className="mt-4 rounded-lg bg-blue-700 px-4 py-1 text-lg text-white hover:bg-blue-600"
-                    >
-                      Next
-                    </button>
+                    <div className="w-full flex justify-center gap-5">
+                      <button
+                        type="submit"
+                        name="next"
+                        className="mt-4 rounded-lg bg-blue-700 px-4 py-1 text-lg text-white hover:bg-blue-600"
+                      >
+                        Next
+                      </button>
+                    </div>
                   </div>
                 </div>
               </form>
             ) : next === "Education" ? (
-              <form onSubmit={handleEducationInfo}>
+              <form onSubmit={handleEducationForm}>
                 <h1 className="mb-4 mt-5 text-center text-2xl font-medium leading-5 text-gray-800">
                   Educational Information
                 </h1>
@@ -720,7 +814,10 @@ const Admission = () => {
                         </label>
                         <input
                           type="number"
+                          value={form.percentage10}
                           required
+                          min={0}
+                          max={100}
                           className="mt-3 w-full rounded border border-gray-200 bg-gray-100 p-3 text-sm font-medium leading-none text-gray-800 focus:border-gray-600 focus:outline-none"
                           onChange={(e) =>
                             setForm((prev) => ({
@@ -740,6 +837,7 @@ const Admission = () => {
                         <input
                           type="text"
                           required
+                          value={form.board10}
                           className="mt-3 w-full rounded border border-gray-200 bg-gray-100 p-3 text-sm font-medium leading-none text-gray-800 focus:border-gray-600 focus:outline-none"
                           onChange={(e) =>
                             setForm((prev) => ({
@@ -753,13 +851,13 @@ const Admission = () => {
                       <div className="pl-10  md:w-48">
                         <label className="text-sm leading-none text-gray-800">
                           10+2 Percentage
-                          <span className="text-red-500 required-dot ml-0.5">
-                            *
-                          </span>
+
                         </label>
                         <input
                           type="number"
-                          required
+                          min={0}
+                          max={100}
+                          value={form.percentage12}
                           className="mt-3 w-full rounded border border-gray-200 bg-gray-100 p-3 text-sm font-medium leading-none text-gray-800 focus:border-gray-600 focus:outline-none"
                           onChange={(e) =>
                             setForm((prev) => ({
@@ -772,13 +870,11 @@ const Admission = () => {
                       <div className="ml-10 md:w-52">
                         <label className="text-sm leading-none text-gray-800">
                           10+2 Board Name
-                          <span className="text-red-500 required-dot ml-0.5">
-                            *
-                          </span>
+
                         </label>
                         <input
                           type="text"
-                          required
+                          value={form.board12}
                           className="mt-3 w-full rounded border border-gray-200 bg-gray-100 p-3 text-sm font-medium leading-none text-gray-800 focus:border-gray-600 focus:outline-none"
                           onChange={(e) =>
                             setForm((prev) => ({
@@ -790,15 +886,15 @@ const Admission = () => {
                         />
                       </div>
                     </div>
-                    {/* <div className="items-center md:flex lg:mb-8">
+                    <div className="items-center md:flex lg:mb-8">
                       <div className="md:w-52">
                         <label
                           className="text-sm leading-none text-gray-800"
-                          id="fatherFirstName"
                         >
                           Graduation Percentage
                         </label>
                         <input
+                          value={form.graduationPercentage}
                           type="number"
                           className="mt-3 w-full rounded border border-gray-200 bg-gray-100 p-3 text-sm font-medium leading-none text-gray-800 focus:border-gray-600 focus:outline-none"
                           aria-labelledby="firstName"
@@ -807,30 +903,28 @@ const Admission = () => {
                       <div className="ml-10 md:w-56">
                         <label
                           className="text-sm leading-none text-gray-800"
-                          id="fatherMiddleName"
                         >
                           Graduation University Name
                         </label>
                         <input
                           type="text"
+                          value={form.graduationUnivercity}
                           className="mt-3 w-full rounded border border-gray-200 bg-gray-100 p-3 text-sm font-medium leading-none text-gray-800 focus:border-gray-600 focus:outline-none"
                           aria-labelledby="middleName"
                           placeholder="Your university name"
                         />
                       </div>
-                    </div> */}
+                    </div>
                     <div className="mt-4 items-center md:flex lg:mt-0">
                       <div className="w-full">
                         <label className="text-sm leading-none text-gray-800">
                           Name of the last University / Council / Board
                           Examination passed
-                          <span className="text-red-500 required-dot ml-0.5">
-                            *
-                          </span>
+
                         </label>
                         <input
                           type="text"
-                          required
+                          value={form.lastUniversity}
                           className="mt-3 w-full rounded border border-gray-200 bg-gray-100 p-3 text-sm font-medium leading-none text-gray-800 focus:border-gray-600 focus:outline-none"
                           onChange={(e) =>
                             setForm((prev) => ({
@@ -844,13 +938,11 @@ const Admission = () => {
                       <div className="ml-10 md:w-64">
                         <label className="text-sm leading-none text-gray-800">
                           Year Of Passing
-                          <span className="text-red-500 required-dot ml-0.5">
-                            *
-                          </span>
+
                         </label>
                         <input
                           type="text"
-                          required
+                          value={form.passingYear}
                           className="mt-3 w-full rounded border border-gray-200 bg-gray-100 p-3 text-sm font-medium leading-none text-gray-800 focus:border-gray-600 focus:outline-none"
                           onChange={(e) =>
                             setForm((prev) => ({
@@ -867,6 +959,7 @@ const Admission = () => {
                         </label>
                         <input
                           type="text"
+                          value={form.rollNo}
                           className="mt-3 w-full rounded border border-gray-200 bg-gray-100 p-3 text-sm font-medium leading-none text-gray-800 focus:border-gray-600 focus:outline-none"
                           onChange={(e) =>
                             setForm((prev) => ({
@@ -885,6 +978,7 @@ const Admission = () => {
                         </label>
                         <input
                           type="text"
+                          value={form.regNo}
                           className="mt-3 w-full rounded border border-gray-200 bg-gray-100 p-3 text-sm font-medium leading-none text-gray-800 focus:border-gray-600 focus:outline-none"
                           onChange={(e) =>
                             setForm((prev) => ({
@@ -905,6 +999,7 @@ const Admission = () => {
                         <input
                           type="text"
                           required
+                          value={form.best4}
                           className="mt-3 w-full rounded border border-gray-200 bg-gray-100 p-3 text-sm font-medium leading-none text-gray-800 focus:border-gray-600 focus:outline-none"
                           onChange={(e) =>
                             setForm((prev) => ({
@@ -923,6 +1018,7 @@ const Admission = () => {
                         </label>
                         <input
                           type="text"
+                          value={form.extraCourse}
                           className="mt-3 w-full rounded border border-gray-200 bg-gray-100 p-3 text-sm font-medium leading-none text-gray-800 focus:border-gray-600 focus:outline-none"
                           onChange={(e) =>
                             setForm((prev) => ({
@@ -934,12 +1030,24 @@ const Admission = () => {
                         />
                       </div>
                     </div>
-                    <button
-                      className="mt-5 rounded-lg bg-blue-700 px-4 py-1 text-lg text-white hover:bg-blue-600"
-                      type="submit"
-                    >
-                      Next
-                    </button>
+                    <div className="w-full flex justify-center gap-5">
+                      <button
+                        type="button"
+                        onClick={handleClick}
+                        name="prev"
+                        className="mt-4 rounded-lg bg-blue-700 px-4 py-1 text-lg text-white hover:bg-blue-600"
+                      >
+                        Back
+                      </button>
+                      <button
+                        className="mt-5 rounded-lg bg-blue-700 px-4 py-1 text-lg text-white hover:bg-blue-600"
+                        type="submit"
+                      >
+                        Next
+                      </button>
+                    </div>
+
+
                   </div>
                 </div>
               </form>
@@ -992,24 +1100,30 @@ const Admission = () => {
                           />
                         </div>
                       </div>
-                      <div className="ml-10 md:w-64">
-                        <div className="w-72">
-                          <label
-                            className="text-sm font-medium leading-none text-gray-800"
-                            id="university"
-                          >
-                            Cast certificate if any
-                          </label>
-                          <input
-                            type="file"
-                            className="mt-1"
-                            multiple
-                            onChange={(e) =>
-                              uploadDocument({ e, docName: "castCertificate" })
-                            }
-                          />
+                      {form.caste != "General" && (
+                        <div className="ml-10 md:w-64">
+                          <div className="w-72">
+                            <label
+                              className="text-sm font-medium leading-none text-gray-800"
+                              id="university"
+                            >
+                              Cast certificate if any
+                              <span className="text-red-500 required-dot ml-0.5">
+                                *
+                              </span>
+                            </label>
+                            <input
+                              type="file"
+                              className="mt-1"
+                              multiple
+                              onChange={(e) =>
+                                uploadDocument({ e, docName: "castCertificate" })
+                              }
+                            />
+                          </div>
                         </div>
-                      </div>
+                      )}
+
                     </div>
                     <div className="items-center md:flex lg:mt-8">
                       <div className="w-64">
@@ -1080,12 +1194,22 @@ const Admission = () => {
                         />
                       </div>
                     </div>
-                    <button
-                      className="mt-5 rounded-lg bg-blue-700 px-4 py-1 text-lg text-white hover:bg-blue-600"
-                      onClick={handleUploadDocuments}
-                    >
-                      Next
-                    </button>
+                    <div className="w-full flex justify-center gap-5 ">
+                      <button
+                        className="mt-5 rounded-lg bg-blue-700 px-4 py-1 text-lg text-white hover:bg-blue-600"
+                        onClick={handleToEducation}
+                        name="prev"
+                      >
+                        Prev
+                      </button>
+                      <button
+                        className="mt-5 rounded-lg bg-blue-700 px-4 py-1 text-lg text-white hover:bg-blue-600"
+                        onClick={handleUploadDocuments}
+                      >
+                        Next
+                      </button>
+                    </div>
+
                   </div>
                 </div>
               </>

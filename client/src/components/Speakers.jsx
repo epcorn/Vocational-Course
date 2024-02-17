@@ -7,6 +7,7 @@ import { DiamondIcon } from "./DiamondIcon";
 import dianneGuilianelliImage from "../images/sanjay.jpeg";
 import jaquelinIschImage from "../images/dr.jpeg";
 import stevenMchailImage from "../images/stq.jpeg";
+import soumImage from "../images/soum.jpeg";
 
 const days = [
   {
@@ -27,7 +28,7 @@ const days = [
       {
         name: "Dr. Sanjay Sarkar",
         role: "Course Coordinator",
-        image: dianneGuilianelliImage,
+        image: soumImage,
       },
     ],
   },

@@ -3,12 +3,17 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import { v2 as cloudinary } from "cloudinary";
 import fileUpload from "express-fileupload";
-import Student from "./studentModel.js";
+import Student from "./models/student.model.js";
 import fs from "fs";
 import cors from "cors";
 import path from "path";
 import brevo from "@getbrevo/brevo";
 import exceljs from "exceljs";
+import cookeParser from "cookie-parser";
+
+import studentRoutes from "./routes/student.route.js";
+import adminRoutes from "./routes/admin.route.js";
+import visitorRoutes from "./routes/visitor.route.js";
 
 dotenv.config();
 const app = express();
@@ -22,6 +27,13 @@ cloudinary.config({
 app.use(cors());
 app.use(express.json());
 app.use(fileUpload({ useTempFiles: true }));
+app.use(cookeParser());
+
+
+
+app.use("/api/student", studentRoutes);
+app.use("/api/admin", adminRoutes);
+app.use("/api/visitor", visitorRoutes);
 
 app.post("/api/documentUpload", async (req, res) => {
   try {
@@ -52,17 +64,8 @@ app.post("/api/documentUpload", async (req, res) => {
   }
 });
 
-app.post("/api/studentRegister", async (req, res) => {
-  try {
-    await Student.create({ details: req.body });
-
-    res.status(201).json({ msg: "Registration completed" });
-  } catch (error) {
-    console.log(error);
-  }
-});
-
 app.get("/api/generateFile", async (req, res) => {
+  console.log("this is");
   try {
     const students = await Student.find();
 
@@ -192,6 +195,7 @@ app.get("/api/generateFile", async (req, res) => {
   }
 });
 
+
 if (process.env.NODE_ENV === "production") {
   const __dirname = path.resolve();
   app.use(express.static(path.join(__dirname, "/client/dist")));
@@ -204,10 +208,21 @@ if (process.env.NODE_ENV === "production") {
   });
 }
 
+app.use((err, req, res, next) => {
+  const statusCode = err.status || 500;
+  const message = err.message || "Internal server Error";
+  console.log(err);
+  res.status(statusCode).json({
+    success: false,
+    statusCode,
+    message,
+  });
+})
+
 const port = process.env.PORT || 5000;
 const connectDB = async () => {
   try {
-    await mongoose.connect(process.env.MONGO_URI);
+    await mongoose.connect(process.env.MONGO_LOCAL);
     app.listen(port, () => console.log("Server is listing"));
   } catch (error) {
     console.log(error);

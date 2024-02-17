@@ -2,7 +2,7 @@ const defaultTheme = require("tailwindcss/defaultTheme");
 
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
+  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}", 'node_modules/flowbite-react/lib/esm/**/*.js'],
   theme: {
     fontSize: {
       xs: ["0.75rem", { lineHeight: "1rem" }],
@@ -33,5 +33,5 @@ export default {
       },
     },
   },
-  plugins: [],
+  plugins: [require('flowbite/plugin')],
 };
