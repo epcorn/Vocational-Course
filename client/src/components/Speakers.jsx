@@ -28,13 +28,14 @@ const days = [
       {
         name: "Dr. Sanjay Sarkar",
         role: "Course Coordinator",
-        image: soumImage,
+        image: dianneGuilianelliImage,
       },
     ],
   },
   {
     name: "Classes & Workshops",
     date: "1st Batch: Announced Soon",
+    dateTime: "2022-04-05",
     speakers: [
       {
         name: "Stelson Quadros",
@@ -49,7 +50,7 @@ const days = [
       {
         name: "Dr. Soumyajit Banerjee",
         role: "Head Of Department",
-        image: dianneGuilianelliImage,
+        image: soumImage,
       },
     ],
   },
@@ -71,7 +72,7 @@ const days = [
       {
         name: "Dr. Soumyajit Banerjee",
         role: "Head Of Department",
-        image: dianneGuilianelliImage,
+        image: soumImage,
       },
     ],
   },

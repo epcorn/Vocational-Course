@@ -3,9 +3,23 @@ import { Button } from "./Button";
 import { Container } from "./Container";
 import { Logo } from "./Logo";
 import Notice from "./Notice";
-import meritPdf from "../assets/merit.pdf";
+import { useEffect, useState } from "react";
+import { MeritListBtn } from "./MeritListBtn";
+import { StudentBtn } from "./StudentBtn";
 
 export function Header() {
+  const [links, setLinks] = useState(null);
+  useEffect(() => {
+    const fetchLinks = async () => {
+      const res = await fetch("/api/links");
+      const data = await res.json();
+      if (res.ok) {
+        setLinks(data);
+      }
+    };
+    fetchLinks();
+  }, []);
+
   return (
     <header className="relative z-50 lg:pt-4 ">
       <Container className="flex flex-wrap items-center justify-center sm:justify-between lg:flex-nowrap">
@@ -21,22 +35,19 @@ export function Header() {
         </div>
         <div className="flex gap-3">
           <div className="hidden sm:mt-10 sm:flex lg:mt-0 lg:grow lg:basis-0 lg:justify-end">
-            <a href="https://res.cloudinary.com/epcorn/image/upload/v1701693934/signature/Final_Prospectus_suqeg2.pdf" target="_blank" rel="noopener noreferrer">
+            <a href={links?.prospectus} target="_blank" rel="noopener noreferrer">
               <Button
-                className="bg-green-600 hover:bg-green-500"
+                className="bg-pink-500 hover:bg-pink-400"
               >
                 Prospectus
               </Button>
             </a>
           </div>
           <div className="hidden sm:mt-10 sm:flex lg:mt-0 lg:grow lg:basis-0 lg:justify-end">
-            <a href={meritPdf} target="_blank" rel="noopener noreferrer">
-              <Button
-                className="bg-yellow-600 hover:bg-yellow-500"
-              >
-                Merit List
-              </Button>
-            </a>
+            <StudentBtn />
+          </div>
+          <div className="hidden sm:mt-10 sm:flex lg:mt-0 lg:grow lg:basis-0 lg:justify-end">
+            <MeritListBtn links={links?.meritList} />
           </div>
           <div className="flex items-center justify-center">
             <Link to="/admin/login">

@@ -3,7 +3,6 @@ import mongoose from "mongoose";
 const studentSchema = new mongoose.Schema(
   {
     details: { type: Object },
-    documents: { type: Object },
   },
   { timestamps: true }
 );

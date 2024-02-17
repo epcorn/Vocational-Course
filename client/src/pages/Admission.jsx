@@ -5,10 +5,13 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { toast } from "react-toastify";
 import Loading from "../components/Loading";
+import { Modal } from "flowbite-react";
+import { Button } from "../components/Button";
 
 const Admission = () => {
   const [next, setNext] = useState("Personal Information");
   const [isLoading, setLoading] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
   const [form, setForm] = useState({
     firstName: "",
     middleName: "",
@@ -49,6 +52,7 @@ const Admission = () => {
     castCertificate: [],
     marksheet10: [],
     marksheet12: [],
+    marksheetGraduation: [],
     vocationalCerti: [],
     donePersonal: false,
     doneEducation: false,
@@ -89,7 +93,7 @@ const Admission = () => {
 
   const sendPostRequest = async () => {
     try {
-      const response = await axios.post('/api/student/personalInfo', {
+      const response = await axios.post('/api/students/studentRegister', {
         form
       });
       console.log('Response:', response.data);
@@ -99,15 +103,15 @@ const Admission = () => {
   };
 
   // Use useEffect hook to run the function every 5 seconds
-  useEffect(() => {
-    const interval = setInterval(() => {
-      sendPostRequest();
-    }, 5000);
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     sendPostRequest();
+  //   }, 5000);
 
-    // Clean up the interval to avoid memory leaks
-    return () => clearInterval(interval);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [form]); // Empty dependency array ensures it only runs once on component mount
+  //   // Clean up the interval to avoid memory leaks
+  //   return () => clearInterval(interval);
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [form]); // Empty dependency array ensures it only runs once on component mount
 
 
 
@@ -123,11 +127,9 @@ const Admission = () => {
     setLoading(true);
     try {
       // eslint-disable-next-line no-unused-vars
-      const res = await axios.post(
-        "/api/student/studentRegister",
-      );
-
       setLoading(false);
+      setOpenModal(true);
+      sendPostRequest();
       toast.success("Application Submitted");
     } catch (error) {
       console.log(error);
@@ -139,7 +141,8 @@ const Admission = () => {
   const handleUploadDocuments = () => {
     if (
       !form.marksheet10.length ||
-      !form.marksheet12.length ||
+      form.percentage12 !== "" && !form.marksheet12.length ||
+      form.graduationPercentage !== "" && !form.marksheetGraduation.length ||
       !form.aadharCard.length ||
       !form.passportPics.length ||
       form.caste != "General" && !form.castCertificate.length
@@ -896,6 +899,12 @@ const Admission = () => {
                         <input
                           value={form.graduationPercentage}
                           type="number"
+                          onChange={(e) =>
+                            setForm((prev) => ({
+                              ...prev,
+                              graduationPercentage: e.target.value,
+                            }))
+                          }
                           className="mt-3 w-full rounded border border-gray-200 bg-gray-100 p-3 text-sm font-medium leading-none text-gray-800 focus:border-gray-600 focus:outline-none"
                           aria-labelledby="firstName"
                         />
@@ -909,6 +918,12 @@ const Admission = () => {
                         <input
                           type="text"
                           value={form.graduationUnivercity}
+                          onChange={(e) =>
+                            setForm((prev) => ({
+                              ...prev,
+                              graduationUnivercity: e.target.value,
+                            }))
+                          }
                           className="mt-3 w-full rounded border border-gray-200 bg-gray-100 p-3 text-sm font-medium leading-none text-gray-800 focus:border-gray-600 focus:outline-none"
                           aria-labelledby="middleName"
                           placeholder="Your university name"
@@ -1030,7 +1045,7 @@ const Admission = () => {
                         />
                       </div>
                     </div>
-                    <div className="w-full flex justify-center gap-5">
+                    <div className="w-full flex justify-center items-center gap-5">
                       <button
                         type="button"
                         onClick={handleClick}
@@ -1145,36 +1160,49 @@ const Admission = () => {
                           }
                         />
                       </div>
-                      <div className="w-64 ml-10">
-                        <label
-                          className="text-sm font-medium leading-none text-gray-800"
-                          id="university"
-                        >
-                          10+2 Marksheet
-                          <span className="text-red-500 required-dot ml-0.5">
-                            *
-                          </span>
-                        </label>
-                        <input
-                          type="file"
-                          className="mt-1"
-                          multiple
-                          onChange={(e) =>
-                            uploadDocument({ e, docName: "marksheet12" })
-                          }
-                        />
-                      </div>
-                      {/* <div className="ml-10 md:w-64">
+                      {form.percentage12 != "" && (
+                        <div className="w-64 ml-10">
+                          <label
+                            className="text-sm font-medium leading-none text-gray-800"
+                            id="university"
+                          >
+                            10+2 Marksheet
+                            <span className="text-red-500 required-dot ml-0.5">
+                              *
+                            </span>
+                          </label>
+                          <input
+                            type="file"
+                            className="mt-1"
+                            multiple
+                            onChange={(e) =>
+                              uploadDocument({ e, docName: "marksheet12" })
+                            }
+                          />
+                        </div>
+                      )}
+                      {form.graduationPercentage != "" && (<div className="ml-10 md:w-64">
                         <div className="w-64">
                           <label
                             className="text-sm font-medium leading-none text-gray-800"
                             id="university"
                           >
                             Graduation Marksheet
+                            <span className="text-red-500 required-dot ml-0.5">
+                              *
+                            </span>
                           </label>
-                          <input type="file" className="mt-1" />
+                          <input
+                            type="file"
+                            className="mt-1"
+                            multiple
+                            onChange={(e) =>
+                              uploadDocument({ e, docName: "marksheetGraduation" })
+                            }
+                          />
                         </div>
-                      </div> */}
+                      </div>
+                      )}
                     </div>
                     <div className="md:w-64 mt-8">
                       <div className="w-72">
@@ -1241,6 +1269,22 @@ const Admission = () => {
               </div>
             )}
           </div>
+          <Modal dismissible show={openModal} onClose={() => setOpenModal(false)}>
+            <Modal.Header>Payment Gateway</Modal.Header>
+            <Modal.Body>
+              <div className="space-y-6">
+                <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                  Link for the payment will be provided soon
+                </p>
+              </div>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button onClick={() => setOpenModal(false)}>I accept</Button>
+              <Button color="gray" onClick={() => setOpenModal(false)}>
+                Decline
+              </Button>
+            </Modal.Footer>
+          </Modal>
         </div>
       </div>
     </div>

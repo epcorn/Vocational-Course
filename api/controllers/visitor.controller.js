@@ -1,4 +1,3 @@
-import Student from "../models/student.model.js";
 import Visitor from "../models/visitor.model.js";
 import { errorHandler } from "../utils/error.js";
 
@@ -29,12 +28,12 @@ export const registerVisitor = async (req, res, next) => {
     } catch (error) {
         next(error);
     }
-}
+};
 
-export const  getVisitor = async (req, res, next) => {
-    try{
-        if(!req.user.isAdmin){
-            return next(errorHandler(403, "You are not allowed to get meals "));
+export const getVisitor = async (req, res, next) => {
+    try {
+        if (!req.user.isAdmin) {
+            return next(errorHandler(403, "Not authorised"));
         }
         const visitors = await Visitor.find();
         const totalVisitor = await Visitor.countDocuments();
@@ -43,7 +42,7 @@ export const  getVisitor = async (req, res, next) => {
             visitors,
             totalVisitor,
         });
-    }catch (error){
-        next(error)
+    } catch (error) {
+        next(error);
     }
 };

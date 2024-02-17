@@ -2,7 +2,7 @@ import { Footer } from "./components/Footer";
 import { Header } from "./components/Header";
 import Home from "./pages/Home";
 import Admission from "./pages/Admission";
-import Login from "./pages/Login";
+import Login from "./adminComponents/Login";
 import Dashboard from "./pages/Dashboard";
 import AdminHeader from "./adminComponents/AdminHeader";
 
@@ -25,7 +25,7 @@ function App() {
 
     const [hideOverlay, setHideOverlay] = useState(() => {
       const visited = window.localStorage.getItem("visited");
-      return (visited ? false : true)
+      return (visited ? false : true);
     });
 
     const [form, setForm] = useState(null);
@@ -48,7 +48,7 @@ function App() {
         try {
           // eslint-disable-next-line no-unused-vars
           const res = await axios.post(
-            "/api/visitor/",
+            "/api/visitors/",
             form
           );
           window.localStorage.setItem("visited", true);
@@ -63,7 +63,7 @@ function App() {
         setErrorMessage("Enter valid number!");
       }
 
-    }
+    };
 
     const handleChange = (e) => {
       setError(false);
@@ -136,8 +136,8 @@ function App() {
           <Outlet />
         </div>
       </>
-    )
-  }
+    );
+  };
 
   const router = createBrowserRouter(
     createRoutesFromElements(
