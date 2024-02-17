@@ -5,7 +5,7 @@ import visitorRoutes from "./visitor.route.js";
 
 const router = express.Router();
 
-// Define route handlers
+
 router.use("/students", studentRoutes);
 router.use("/admins", adminRoutes);
 router.use("/visitors", visitorRoutes);

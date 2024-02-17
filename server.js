@@ -4,7 +4,6 @@ import fileUpload from "express-fileupload";
 import cors from "cors";
 import path from "path";
 import cookeParser from "cookie-parser";
-
 import rootRouter from "./routes/index.js";
 import connectDB from "./config/mongoose.js";
 import { uploadDocument, generateFile, getLinks } from "./controllers/document.controller.js";
