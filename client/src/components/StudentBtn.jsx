@@ -1,5 +1,6 @@
 import { Menu, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
+import { Link } from 'react-router-dom';
 
 export function StudentBtn() {
     return (
@@ -24,24 +25,28 @@ export function StudentBtn() {
                         <div className="px-1 py-1 ">
                             <Menu.Item>
                                 {({ active }) => (
-                                    <button
-                                        className={`${active ? 'bg-green-100 text-slate-500' : 'text-gray-900'
-                                            } group flex gap-2 w-full items-center rounded-md px-2 py-2 text-sm`}
-                                    >
-                                        <Folder className="text-yellow-200" />
-                                        Resources
-                                    </button>
+                                    <Link to="/login">
+                                        <button
+                                            className={`${active ? 'bg-green-100 text-slate-500' : 'text-gray-900'
+                                                } group flex gap-2 w-full items-center rounded-md px-2 py-2 text-sm`}
+                                        >
+                                            <Folder className="text-yellow-200" />
+                                            Resources
+                                        </button>
+                                    </Link>
                                 )}
                             </Menu.Item>
                             <Menu.Item>
                                 {({ active }) => (
-                                    <button
-                                        className={`${active ? 'bg-green-100 text-slate-500' : 'text-gray-900'
-                                            } group flex gap-2 w-full items-center rounded-md px-2 py-2 text-sm`}
-                                    >
-                                        <User className="" />
-                                        Login
-                                    </button>
+                                    <Link to="/login">
+                                        <button
+                                            className={`${active ? 'bg-green-100 text-slate-500' : 'text-gray-900'
+                                                } group flex gap-2 w-full items-center rounded-md px-2 py-2 text-sm`}
+                                        >
+                                            <User className="" />
+                                            Login
+                                        </button>
+                                    </Link>
                                 )}
                             </Menu.Item>
                         </div>

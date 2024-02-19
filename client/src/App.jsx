@@ -145,6 +145,7 @@ function App() {
         <Route path="/" element={<Layout />}>
           <Route index path="/" element={<Home />} />,
           <Route path="/admission" element={<Admission />} />
+          <Route path="/login" element={<Login />} />
         </Route>
         <Route path="/admin" element={<LayoutB />}>
           <Route path="login" element={<Login />} />
