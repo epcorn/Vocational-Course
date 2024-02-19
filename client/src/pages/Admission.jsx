@@ -7,12 +7,15 @@ import { toast } from "react-toastify";
 import Loading from "../components/Loading";
 import { Modal } from "flowbite-react";
 import { Button } from "../components/Button";
+import useLocalStorage from "../customHooks/useLocalStorage";
+
 
 const Admission = () => {
   const [next, setNext] = useState("Personal Information");
   const [isLoading, setLoading] = useState(false);
   const [openModal, setOpenModal] = useState(false);
-  const [form, setForm] = useState({
+  const [impInfo, setImpInfo] = useState({ firstName: "", email: "", phone: "" });
+  const [form, setForm] = useLocalStorage("form", {
     firstName: "",
     middleName: "",
     lastName: "",
@@ -102,17 +105,12 @@ const Admission = () => {
     }
   };
 
-  // Use useEffect hook to run the function every 5 seconds
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     sendPostRequest();
-  //   }, 5000);
-
-  //   // Clean up the interval to avoid memory leaks
-  //   return () => clearInterval(interval);
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [form]); // Empty dependency array ensures it only runs once on component mount
-
+  useEffect(() => {
+    const sendData = setTimeout(() => {
+      axios.post('/api/students/studentRegister', { form });
+    }, 3000);
+    return () => clearTimeout(sendData);
+  }, [impInfo]);
 
 
 
@@ -129,7 +127,7 @@ const Admission = () => {
       // eslint-disable-next-line no-unused-vars
       setLoading(false);
       setOpenModal(true);
-      sendPostRequest();
+      await sendPostRequest();
       toast.success("Application Submitted");
     } catch (error) {
       console.log(error);
@@ -159,6 +157,7 @@ const Admission = () => {
   };
 
   const uploadDocument = async ({ e, docName }) => {
+    console.log(e.target.value);
     setLoading(true);
     try {
       const images = Array.from(e.target.files);
@@ -180,6 +179,16 @@ const Admission = () => {
     }
   };
 
+  function handleImpInfoChange(e) {
+    setForm((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value
+    }));
+    setImpInfo((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value
+    }));
+  }
 
   return (
     <div className="m-5">
@@ -278,17 +287,13 @@ const Admission = () => {
                         <input
                           required
                           type="text"
+                          name="firstName"
                           value={form.firstName}
                           className="mt-3 w-full rounded border border-gray-200 bg-gray-100 p-3 text-sm font-medium leading-none text-gray-800 focus:border-gray-600 focus:outline-none"
                           aria-labelledby="firstName"
                           placeholder="John"
                           maxLength={30}
-                          onChange={(e) =>
-                            setForm((prev) => ({
-                              ...prev,
-                              firstName: e.target.value,
-                            }))
-                          }
+                          onChange={handleImpInfoChange}
                         />
                       </div>
                       <div className="ml-10 md:w-64">
@@ -353,16 +358,12 @@ const Admission = () => {
                         <input
                           required
                           type="email"
+                          name="email"
                           value={form.email}
                           className="mt-3 w-full rounded border border-gray-200 bg-gray-100 p-3 text-sm font-medium leading-none text-gray-800 focus:border-gray-600 focus:outline-none"
                           aria-labelledby="emailAddress"
                           placeholder="youremail@example.com"
-                          onChange={(e) =>
-                            setForm((prev) => ({
-                              ...prev,
-                              email: e.target.value,
-                            }))
-                          }
+                          onChange={handleImpInfoChange}
                         />
                       </div>
                       <div className="mt-4 md:ml-10 md:mt-0 md:w-64">
@@ -375,16 +376,12 @@ const Admission = () => {
                         <input
                           required
                           type="number"
+                          name="phone"
                           value={form.phone}
                           className="mt-3 w-full rounded border border-gray-200 bg-gray-100 p-3 text-sm font-medium leading-none text-gray-800 focus:border-gray-600 focus:outline-none"
                           aria-labelledby="phone"
                           placeholder="123-1234567"
-                          onChange={(e) =>
-                            setForm((prev) => ({
-                              ...prev,
-                              phone: e.target.value,
-                            }))
-                          }
+                          onChange={handleImpInfoChange}
                         />
                       </div>
                       <div className="mt-4 md:ml-10 md:mt-0 md:w-64">
@@ -1075,7 +1072,7 @@ const Admission = () => {
                 <div className="flex justify-between border-b border-gray-200 pb-8 lg:flex">
                   <div>
                     <div className="items-center md:flex lg:mt-8">
-                      <div className="w-64">
+                      <div className="w-64 bg-green-200 rounded-sm">
                         <label
                           className="text-sm font-medium leading-none text-gray-800"
                           id="university"
