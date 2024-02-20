@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Alert, Label, Spinner, TextInput } from "flowbite-react";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -14,7 +14,8 @@ export default function SignIn() {
     const { loading, error: errorMessage } = useSelector((state) => state.user);
     const dispatch = useDispatch();
     const navigate = useNavigate();
-
+    const { pathname } = useLocation();
+    console.log(pathname);
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
     };
@@ -27,23 +28,36 @@ export default function SignIn() {
 
         try {
             dispatch(signInStart());
-            const res = await fetch("/api/admins/login", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(formData),
-            });
-            const data = await res.json();
-            if (data.success === false) {
-                dispatch(signInFailure(data.message));
-            }
+            if (pathname === "/admin/login") {
+                var res = await fetch("/api/admins/login", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(formData),
+                });
 
-            if (res.ok) {
-                dispatch(signInSuccess(data));
-                if (data.isAdmin) {
-                    navigate("/admin/dashboard/dash");
-                } else {
-                    navigate("/admin/login");
+                const data = await res.json();
+                if (data.success === false) {
+                    dispatch(signInFailure(data.message));
                 }
+
+                if (res.ok) {
+                    dispatch(signInSuccess(data));
+                    if (data.isAdmin) {
+                        navigate("/admin/dashboard/dash");
+                    } else {
+                        navigate("/admin/login");
+                    }
+                }
+            }
+            if (pathname === "/login") {
+                // Simulating a fake delay of 3 seconds
+                await new Promise(resolve => setTimeout(resolve, 3000));
+
+                // Simulating successful login response
+                const fakeData = { success: true, message: "Fake login success message", user: { /* your user data here */ } };
+                dispatch(signInSuccess(fakeData));
+                // Redirect to the appropriate page after successful login
+                navigate("/");
             }
         } catch (error) {
             dispatch(signInFailure(error.message));
@@ -62,6 +76,7 @@ export default function SignIn() {
                 {/* right */}
                 <div className=" flex-1">
                     <form className=" flex flex-col gap-4" onSubmit={handleSubmit}>
+
                         <div className="">
                             <Label value="Your email" />
                             <TextInput

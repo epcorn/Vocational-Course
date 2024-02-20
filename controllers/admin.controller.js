@@ -87,6 +87,7 @@ export const anylytics = async (req, res, next) => {
         }
         const Total_Visitors = await Visitor.find();
         const Total_Applicants = await Student.find();
+        const admin = await Admin.findById(req.user.id);
         // Example aggregation pipeline
         const finishedApplicants = await Student.aggregate([{ $match: { "details.donePayment": true } },]);
         // Student.aggregate([
@@ -98,7 +99,7 @@ export const anylytics = async (req, res, next) => {
         // }).catch((err) => {
         //     console.log(err);
         // });
-        res.status(200).json([{ "Prospect_Views": 5 }, { "Total_Visitors": Total_Visitors.length, "list": Total_Visitors }, { "Total_Applicants": Total_Applicants.length, "list": Total_Applicants }, { "Finished_Applicants": finishedApplicants.length, "list": finishedApplicants },]);
+        res.status(200).json([{ "Prospect_Views": admin.prospectus.views }, { "Total_Visitors": Total_Visitors.length, "list": Total_Visitors }, { "Total_Applicants": Total_Applicants.length, "list": Total_Applicants }, { "Finished_Applicants": finishedApplicants.length, "list": finishedApplicants },]);
     } catch (error) {
         next(error);
     }
@@ -109,6 +110,12 @@ export const demography = async (req, res, next) => {
         if (!req.user.isAdmin) {
             return next(errorHandler(401, "Unauthorized"));
         }
+        const maleStudents = await Student.find({ 'details.gender': 'Male' });
+        const maleStudentCount = maleStudents.length;
+
+        const femaleStudents = await Student.find({ 'details.gender': 'Female' });
+        const femaleStudentsCount = femaleStudents.length;
+
         const only10Passed = await Student.aggregate([
             {
                 $match: {
@@ -140,7 +147,8 @@ export const demography = async (req, res, next) => {
 
             },
         ]);
-        res.status(200).json([{ "Only_10_Passed": only10Passed.length, "list": only10Passed }, { "Till_12_Passed": till12Passed.length, "list": till12Passed }, { "Graduate": graduate.length, "list": graduate }, { Male: 5 }, { Female: 10 }]);
+
+        res.status(200).json([{ "Only_10_Passed": only10Passed.length, "list": only10Passed }, { "Till_12_Passed": till12Passed.length, "list": till12Passed }, { "Graduate": graduate.length, "list": graduate }, { Male: maleStudentCount }, { Female: femaleStudentsCount }]);
     } catch (error) {
         next(error);
     }
@@ -169,7 +177,7 @@ export const documentUpload = async (req, res, next) => {
         fs.unlinkSync(image.tempFilePath);
         let updatedAdmin = null;
         if (eventId === "prospectus") {
-            updatedAdmin = await Admin.findByIdAndUpdate(req.user.id, { "prospectus": imageLink }, { new: true });
+            updatedAdmin = await Admin.findByIdAndUpdate(req.user.id, { $set: { "prospectus.link": imageLink } }, { new: true });
         }
         if (eventId === "meritList") {
             updatedAdmin = await Admin.findByIdAndUpdate(
@@ -181,7 +189,19 @@ export const documentUpload = async (req, res, next) => {
         const { password, ...rest } = updatedAdmin._doc;
         return res.status(200).json({ rest });
     } catch (error) {
-        console.log(error);
-        res.status(500).json(error);
+        next(error);
+    }
+};
+
+export const incProspectusViews = async (req, res, next) => {
+    try {
+        const adminId = process.env.ADMIN_DOC_ID;
+        const updatedAdmin = await Admin.findOneAndUpdate(
+            { _id: adminId }, // Query for the admin by their ID
+            { $inc: { "prospectus.views": 1 } }, // Use $inc to increment the views by 1
+        );
+        return res.status(200).json();
+    } catch (error) {
+        next(error);
     }
 };

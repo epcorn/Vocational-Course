@@ -17,13 +17,19 @@ const adminSchema = new mongoose.Schema(
             required: true,
         },
         prospectus: {
-            type: String,
-            default:
-                'https://res.cloudinary.com/epcorn/image/upload/v1701693934/signature/Final_Prospectus_suqeg2.pdf',
+            link: {
+                type: String,
+                default:
+                    'https://res.cloudinary.com/djc8opvcg/image/upload/v1708405304/IPM/tmp-1-1708405299928_wfvff5.pdf',
+            },
+            views: {
+                type: Number,
+                default: 0
+            }
         },
         meritList: {
             type: [String],
-            default: ["https://www.google.com"],
+            default: ["https://res.cloudinary.com/djc8opvcg/image/upload/v1708344134/IPM/tmp-1-1708344132111_fsnmhr.pdf"],
         },
         isAdmin: {
             type: Boolean,

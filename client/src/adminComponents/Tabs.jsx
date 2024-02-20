@@ -99,7 +99,7 @@ export default function Tabs() {
         {isLoading && <Loading />}
         <ToastContainer position="top-center" autoClose={3000} />
         <Tab.Group selectedIndex={selectedIndex} onChange={setSelectedIndex} >
-          <Tab.List className="flex space-x-1 rounded-xl bg-blue-900/20 p-1">
+          <Tab.List className="flex space-x-1 rounded-xl bg-blue-400 p-1">
             {categories.map((category) => (
               <Tab
                 key={category}
@@ -109,7 +109,7 @@ export default function Tabs() {
                     'ring-white/60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2',
                     selected
                       ? 'bg-white text-blue-700 shadow'
-                      : 'text-blue-100 hover:bg-white/[0.12] hover:text-white'
+                      : 'text-slate-600 hover:bg-white/[0.12] hover:text-white'
                   )
                 }
               >
@@ -174,12 +174,10 @@ export default function Tabs() {
               {selectedIndex === 2 && totalApplicants?.length > 0 ? (
                 <div className="table-auto  md:mx-auto p-3  scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500">
 
-                  <Table hoverable className=" shadow-md">
+                  <Table hoverable className=" shadow-lg ">
                     <Table.Head>
-                      <Table.HeadCell>Name</Table.HeadCell>
+                      <Table.HeadCell>File Name</Table.HeadCell>
                       <Table.HeadCell>Upload</Table.HeadCell>
-                      <Table.HeadCell>Download</Table.HeadCell>
-                      <Table.HeadCell>Delete</Table.HeadCell>
                     </Table.Head>
                     <Table.Body className="divide-y">
                       <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
@@ -209,8 +207,6 @@ export default function Tabs() {
                             </div>
                           </div>
                         </Table.Cell>
-                        <Table.Cell>Download</Table.Cell>
-                        <Table.Cell>Delete</Table.Cell>
                       </Table.Row>
                       <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
                         <Table.Cell>
@@ -239,8 +235,6 @@ export default function Tabs() {
                             </div>
                           </div>
                         </Table.Cell>
-                        <Table.Cell>Download</Table.Cell>
-                        <Table.Cell>Delete</Table.Cell>
                       </Table.Row>
                     </Table.Body>
                   </Table>

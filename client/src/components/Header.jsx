@@ -19,7 +19,9 @@ export function Header() {
     };
     fetchLinks();
   }, []);
-
+  async function handleClick() {
+    await fetch("/api/admins/incProspectusViews");
+  }
   return (
     <header className="relative z-50 lg:pt-4 ">
       <Container className="flex flex-wrap items-center justify-center sm:justify-between lg:flex-nowrap">
@@ -35,9 +37,10 @@ export function Header() {
         </div>
         <div className="flex gap-3">
           <div className="hidden sm:mt-10 sm:flex lg:mt-0 lg:grow lg:basis-0 lg:justify-end">
-            <a href={links?.prospectus} target="_blank" rel="noopener noreferrer">
+            <a href={links?.prospectus.link} target="_blank" rel="noopener noreferrer">
               <Button
                 className="bg-pink-500 hover:bg-pink-400"
+                onClick={handleClick}
               >
                 Prospectus
               </Button>

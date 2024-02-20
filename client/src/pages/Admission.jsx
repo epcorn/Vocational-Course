@@ -110,6 +110,7 @@ const Admission = () => {
       axios.post('/api/students/studentRegister', { form });
     }, 3000);
     return () => clearTimeout(sendData);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [impInfo]);
 
 

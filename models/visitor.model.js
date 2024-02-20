@@ -8,8 +8,12 @@ const visitorSchema = mongoose.Schema({
     phone: {
         type: Number,
         required: true,
+    },
+    prospectViewed: {
+        type: Boolean,
+        default: false
     }
-}, { timestamps: true })
+}, { timestamps: true });
 
 const Visitor = new mongoose.model("Visitor", visitorSchema);
 
