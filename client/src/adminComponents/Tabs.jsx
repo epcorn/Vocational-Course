@@ -171,7 +171,7 @@ export default function Tabs() {
                 'ring-white/60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2'
               )}
             >
-              {selectedIndex === 2 && totalApplicants?.length > 0 ? (
+              {selectedIndex === 2 && (
                 <div className="table-auto  md:mx-auto p-3  scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500">
 
                   <Table hoverable className=" shadow-lg ">
@@ -239,7 +239,7 @@ export default function Tabs() {
                     </Table.Body>
                   </Table>
                 </div>
-              ) : null}
+              )}
             </Tab.Panel>
           </Tab.Panels>
         </Tab.Group>
