@@ -219,38 +219,68 @@ export const incProspectusViews = async (req, res, next) => {
     }
 };
 
+
 export const admitStudent = async (req, res, next) => {
     try {
         if (!req.user.isAdmin) {
             return res.status(403).json({ message: "Forbidden: Only admins can admit students." });
         }
-        const { studentId } = req.params;
 
-        const student = await Student.findById(studentId);
+        const { studentId } = req.params;
+        const student = await findStudentById(studentId);
+
         if (!student) {
             return res.status(404).json({ message: "Not Found: Student does not exist." });
         }
+
         const { email, phone } = student.details;
-        const isRegistered = await RegisteredStudent.findOne({ email: { $eq: email } });
+        const isRegistered = await isStudentRegistered(email);
+
         if (isRegistered) {
             return res.status(200).json({ message: "Student already enrolled" });
         }
-        const encreptedPhone = await bcryptjs.hash(phone, 10);
-        const enrolledStudent = await RegisteredStudent.create({
-            email: email,
-            password: encreptedPhone,
-            enrolled: true,
-            student
-        });
-        await Student.findByIdAndUpdate(studentId, { $set: { "details.enrolled": true } });
-        //send login id && password via email.
-        const respond = await sendEmailWithLogin({ email, phone });
-        return res.status(200).json({ message: "Student enrolled" });
 
+        const encryptedPhone = await encryptPhone(phone);
+        await enrollStudent(email, encryptedPhone, studentId);
+        await sendEnrollmentEmail(email, phone);
+
+        return res.status(200).json({ message: "Student enrolled" });
     } catch (error) {
         next(error);
     }
 };
+
+// Helper functions
+const findStudentById = async (studentId) => {
+    return await Student.findById(studentId);
+};
+
+const isStudentRegistered = async (email) => {
+    return await RegisteredStudent.findOne({ email });
+};
+
+const encryptPhone = async (phone) => {
+    return await bcryptjs.hash(phone, 10);
+};
+
+const enrollStudent = async (email, encryptedPhone, studentId) => {
+    await RegisteredStudent.create({
+        email,
+        password: encryptedPhone,
+        enrolled: true,
+        student: studentId
+    });
+
+    await Student.findByIdAndUpdate(studentId, { $set: { "details.enrolled": true } });
+};
+
+const sendEnrollmentEmail = async (email, phone) => {
+    const emailSent = await sendEmailWithLogin({ email, phone });
+    if (!emailSent) {
+        throw new Error("Failed to send email with login details");
+    }
+};
+
 
 
 

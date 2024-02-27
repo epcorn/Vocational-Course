@@ -74,7 +74,7 @@ export const sendEmailWithLogin = async (obj) => {
 
         sendSmtpEmail.sender = {
             name: "EPCORN",
-            email: process.env.EA_EMAIL,
+            email: process.env.NO_REPLY_EMAIL,
         };
         sendSmtpEmail.to = [
             { email: email }
@@ -89,7 +89,7 @@ export const sendEmailWithLogin = async (obj) => {
 
         return true; // Email sent successfully
     } catch (error) {
-        console.error("Error sending login details");
+        console.error(`Error sending login details: ${error}`);
         return false;
     }
 }
