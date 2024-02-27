@@ -1,8 +1,28 @@
 import { Menu, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { signoutSuccess } from '../redux/user/userSlice';
 
 export function StudentBtn() {
+    const dispatch = useDispatch();
+    const { currentUser } = useSelector((state) => state.user);
+
+    const handleSignout = async () => {
+        try {
+            const res = await fetch("/api/students/signout", {
+                method: "POST",
+            });
+            const data = await res.json();
+            if (!res.ok) {
+                console.log(data.messsage);
+            } else {
+                dispatch(signoutSuccess());
+            }
+        } catch (error) {
+            console.log(error.messsage);
+        }
+    };
     return (
         <div className="">
             <Menu as="div" className="relative inline-block text-left">
@@ -25,7 +45,7 @@ export function StudentBtn() {
                         <div className="px-1 py-1 ">
                             <Menu.Item>
                                 {({ active }) => (
-                                    <Link to="/login">
+                                    <Link to={currentUser?.student ? "/dashboard/dash?tab=resource" : "/login"}>
                                         <button
                                             className={`${active ? 'bg-green-100 text-slate-500' : 'text-gray-900'
                                                 } group flex gap-2 w-full items-center rounded-md px-2 py-2 text-sm`}
@@ -40,11 +60,12 @@ export function StudentBtn() {
                                 {({ active }) => (
                                     <Link to="/login">
                                         <button
+                                            onClick={handleSignout}
                                             className={`${active ? 'bg-green-100 text-slate-500' : 'text-gray-900'
                                                 } group flex gap-2 w-full items-center rounded-md px-2 py-2 text-sm`}
                                         >
-                                            <User className="" />
-                                            Login
+                                            <User />
+                                            {currentUser?.student ? "Logout" : "Login"}
                                         </button>
                                     </Link>
                                 )}

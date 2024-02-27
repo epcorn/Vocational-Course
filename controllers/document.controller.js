@@ -1,7 +1,7 @@
 import cloudinary from "../config/cloudinary.js";
 import fs from "fs";
 import Student from "../models/student.model.js";
-import sendEmailWithAttachment from "../services/emailService.js";
+import { sendEmailWithAttachment } from "../services/emailService.js";
 import { generateExcelFile } from "../utils/excelUtils.js";
 import Admin from "../models/admin.model.js";
 
@@ -60,9 +60,9 @@ const generateFile = async (req, res, next) => {
 const getLinks = async (req, res, next) => {
     try {
         const admin = await Admin.find();
-        const { meritList, prospectus } = admin[0];
+        const { meritList, prospectus, resources } = admin[0];
         const latestMeritList = meritList.slice(-3);
-        res.status(200).json({ meritList: latestMeritList, prospectus });
+        res.status(200).json({ meritList: latestMeritList, prospectus, resources });
     } catch (error) {
         next(error);
     }

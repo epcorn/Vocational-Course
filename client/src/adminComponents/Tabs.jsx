@@ -5,10 +5,11 @@
 import { useEffect, useState } from 'react';
 import { Tab } from '@headlessui/react';
 import Card from "./Card";
-import { Table } from 'flowbite-react';
+import { Button, Table } from 'flowbite-react';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import Loading from '../components/Loading';
+
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
@@ -25,6 +26,7 @@ export default function Tabs() {
   const [passed12, setPassed12] = useState(null);
   const [graduate, setGraduate] = useState(null);
   const [isLoading, setLoading] = useState(false);
+  const [resource, setResource] = useState({ resource: null, title: "" });
 
 
   const [activeCard, setActiveCard] = useState(1);
@@ -90,8 +92,54 @@ export default function Tabs() {
     }
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const formData = new FormData();
+      formData.append('title', resource.title);
+      formData.append('eventId', "resource");
+      formData.append('image', resource.resource);
+      // eslint-disable-next-line no-unused-vars
+      const res = await axios.post("/api/admins/documentUpload", formData);
+      toast.success("Dociument Uploaded");
+      setResource({ resource: null, title: "" });
+      setLoading(false);
+    } catch (error) {
+      console.error('Error posting data:', error);
+      setLoading(false);
+      toast.error("Document Upload Failed");
+    }
+  };
+
 
   const categories = ["Anylytics", "Demography", "Download/Upload"];
+  const handleAdmit = async (id) => {
+    try {
+      setLoading(true);
+      const res = await axios.post(`/api/admins/admitStudent/${id}`);
+      const updated = totalApplicants.map(item => {
+        if (item._id === id) {
+          return {
+            ...item,
+            details: {
+              ...item.details,
+              enrolled: true
+            }
+          };
+        } else {
+          return item;
+        }
+      });
+      setTotalApplicants(updated);
+      setLoading(false);
+      toast.success(res.data.message);
+    } catch (error) {
+      setLoading(false);
+      toast.error("Admiting student failed!");
+    }
+  };
+
 
   return (
     <>
@@ -236,6 +284,67 @@ export default function Tabs() {
                           </div>
                         </Table.Cell>
                       </Table.Row>
+                      <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
+                        <Table.Cell>
+                          Resource
+                        </Table.Cell>
+                        <Table.Cell>
+                          <div className="ml-10 md:w-64">
+                            <div className="w-72">
+                              <form onSubmit={(e) => handleSubmit(e)} className='flex items-center gap-5'>
+                                <div className='bg-slate-200'>
+                                  <label
+                                    className="text-sm font-medium leading-none text-gray-800"
+                                    htmlFor='resource'
+                                  >
+                                    Choose a resource
+                                    <span className="text-red-500 required-dot ml-0.5">
+                                      *
+                                    </span>
+                                  </label>
+                                  <input
+                                    id="resource"
+                                    type="file"
+                                    className="mt-1"
+                                    onChange={(e) => {
+                                      const file = e.target.files[0];
+                                      if (file) {
+                                        setResource((r) => ({ ...r, resource: file }));
+                                      }
+                                    }}
+
+                                  />
+                                </div>
+                                <div className='bg-slate-200'>
+                                  <label
+                                    className="text-sm font-medium leading-none text-gray-800"
+                                    htmlFor='title'
+                                  >
+                                    Give a title
+                                    <span className="text-red-500 required-dot ml-0.5">
+                                      *
+                                    </span>
+                                  </label>
+                                  <input
+                                    id="title"
+                                    type="text"
+                                    className="mt-1"
+                                    value={resource.title}
+                                    onChange={(e) =>
+                                      setResource(r => ({
+                                        ...r,
+                                        [e.target.id]: e.target.value
+                                      }))
+                                    }
+                                  />
+                                </div>
+                                <button type='submit' className='bg-green-400 rounded p-3 mx-auto '>Submit</button>
+                              </form>
+
+                            </div>
+                          </div>
+                        </Table.Cell>
+                      </Table.Row>
                     </Table.Body>
                   </Table>
                 </div>
@@ -276,6 +385,7 @@ export default function Tabs() {
               <Table.HeadCell>Email</Table.HeadCell>
               <Table.HeadCell>Phone</Table.HeadCell>
               <Table.HeadCell>Caste</Table.HeadCell>
+              <Table.HeadCell>Admit</Table.HeadCell>
             </Table.Head>
             {totalApplicants?.map((t) => (
               <Table.Body key={t._id} className="divide-y">
@@ -286,6 +396,15 @@ export default function Tabs() {
                   <Table.Cell>{t.details.email === "" ? "null" : t.details.email}</Table.Cell>
                   <Table.Cell>{t.details.phone === "" ? "null" : t.details.phone}</Table.Cell>
                   <Table.Cell>{t.details.caste === "" ? "null" : t.details.caste}</Table.Cell>
+                  <Table.Cell>
+                    <Button
+                      className={`bg-red-500 hover:bg-red-400 rounded-md p-1 shadow-md text-black w-full ${t.details.enrolled ? "bg-green-400 hover:bg-green-300" : ""}`}
+                      onClick={() => handleAdmit(t._id)}
+                    >
+                      {t.details.enrolled ? "Admited" : "Admit"}
+                    </Button>
+                  </Table.Cell>
+
                 </Table.Row>
               </Table.Body>
             ))}

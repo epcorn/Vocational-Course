@@ -6,6 +6,9 @@ import { errorHandler } from "../utils/error.js";
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
 import cloudinary from "../config/cloudinary.js";
+import RegisteredStudent from "../models/registerd.student.model.js";
+import { sendEmailWithLogin } from "../services/emailService.js";
+import Resource from "../models/resource.model.js";
 
 export const signup = async (req, res, next) => {
     const { username, email, password } = req.body;
@@ -20,7 +23,7 @@ export const signup = async (req, res, next) => {
     ) {
         next(errorHandler(400, "All fields are requird")); // HTTP status code for Bad Request
     }
-    const hashedPassword = bcryptjs.hashSync(password, 10);
+    const hashedPassword = await bcryptjs.hash(password, 10);
 
     const newAdmin = new Admin({
         username,
@@ -49,7 +52,7 @@ export const login = async (req, res, next) => {
             return next(errorHandler(404, "User not found")); // HTTP status code for Not Found
         }
 
-        const validPassword = bcryptjs.compareSync(password, validAdmin.password);
+        const validPassword = await bcryptjs.compare(password, validAdmin.password);
         if (!validPassword) {
             return next(errorHandler(400, "Invalid credentials")); // HTTP status code for Bad Request
         }
@@ -165,6 +168,7 @@ export const documentUpload = async (req, res, next) => {
         }
         const image = req.files.image; // Assuming there is only one file
         const eventId = (req.body.eventId);
+
         const result = await cloudinary.uploader.upload(image.tempFilePath, {
             use_filename: true,
             folder: "IPM",
@@ -186,8 +190,17 @@ export const documentUpload = async (req, res, next) => {
                 { new: true }
             );
         }
+        if (eventId === "resource") {
+            const { title } = req.body;
+            const newResource = await Resource.create({
+                title: title,
+                pdfLink: imageLink
+            });
+            console.log(newResource);
+            updatedAdmin = await Admin.findByIdAndUpdate(req.user.id, { $push: { resources: newResource } }, { new: true });
+        }
         const { password, ...rest } = updatedAdmin._doc;
-        return res.status(200).json({ rest });
+        return res.status(200).json({ ...rest, message: "Document uploaded" });
     } catch (error) {
         next(error);
     }
@@ -205,3 +218,39 @@ export const incProspectusViews = async (req, res, next) => {
         next(error);
     }
 };
+
+export const admitStudent = async (req, res, next) => {
+    try {
+        if (!req.user.isAdmin) {
+            return res.status(403).json({ message: "Forbidden: Only admins can admit students." });
+        }
+        const { studentId } = req.params;
+
+        const student = await Student.findById(studentId);
+        if (!student) {
+            return res.status(404).json({ message: "Not Found: Student does not exist." });
+        }
+        const { email, phone } = student.details;
+        const isRegistered = await RegisteredStudent.findOne({ email: { $eq: email } });
+        if (isRegistered) {
+            return res.status(200).json({ message: "Student already enrolled" });
+        }
+        const encreptedPhone = await bcryptjs.hash(phone, 10);
+        const enrolledStudent = await RegisteredStudent.create({
+            email: email,
+            password: encreptedPhone,
+            enrolled: true,
+            student
+        });
+        await Student.findByIdAndUpdate(studentId, { $set: { "details.enrolled": true } });
+        //send login id && password via email.
+        const respond = await sendEmailWithLogin({ email, phone });
+        return res.status(200).json({ message: "Student enrolled" });
+
+    } catch (error) {
+        next(error);
+    }
+};
+
+
+

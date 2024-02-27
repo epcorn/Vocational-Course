@@ -15,7 +15,6 @@ export default function SignIn() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { pathname } = useLocation();
-    console.log(pathname);
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
     };
@@ -29,7 +28,7 @@ export default function SignIn() {
         try {
             dispatch(signInStart());
             if (pathname === "/admin/login") {
-                var res = await fetch("/api/admins/login", {
+                const res = await fetch("/api/admins/login", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(formData),
@@ -50,14 +49,21 @@ export default function SignIn() {
                 }
             }
             if (pathname === "/login") {
-                // Simulating a fake delay of 3 seconds
-                await new Promise(resolve => setTimeout(resolve, 3000));
+                var response = await fetch("/api/students/login", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(formData),
+                });
 
-                // Simulating successful login response
-                const fakeData = { success: true, message: "Fake login success message", user: { /* your user data here */ } };
-                dispatch(signInSuccess(fakeData));
-                // Redirect to the appropriate page after successful login
-                navigate("/");
+                const data = await response.json();
+                if (data.success === false) {
+                    dispatch(signInFailure(data.message));
+                }
+
+                if (response.ok) {
+                    dispatch(signInSuccess(data));
+                    navigate("/dashboard/dash");
+                }
             }
         } catch (error) {
             dispatch(signInFailure(error.message));

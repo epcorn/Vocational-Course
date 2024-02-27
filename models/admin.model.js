@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-
+import { resourceSchema } from "./resource.model.js";
 const adminSchema = new mongoose.Schema(
     {
         username: {
@@ -30,6 +30,9 @@ const adminSchema = new mongoose.Schema(
         meritList: {
             type: [String],
             default: ["https://res.cloudinary.com/djc8opvcg/image/upload/v1708344134/IPM/tmp-1-1708344132111_fsnmhr.pdf"],
+        },
+        resources: {
+            type: [resourceSchema],
         },
         isAdmin: {
             type: Boolean,

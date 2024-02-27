@@ -18,6 +18,8 @@ import { useRef, useState } from "react";
 import { Alert, Label, Modal, TextInput } from "flowbite-react";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
+import StudDash from "./components/StudDash";
+import StudentPrivateRoute from "./components/StudentPrivateRoute";
 
 
 function App() {
@@ -144,8 +146,11 @@ function App() {
       <>
         <Route path="/" element={<Layout />}>
           <Route index path="/" element={<Home />} />,
-          <Route path="/admission" element={<Admission />} />
-          <Route path="/login" element={<Login />} />
+          <Route path="admission" element={<Admission />} />
+          <Route path="login" element={<Login />} />
+          <Route path="dashboard" element={<StudentPrivateRoute />}>
+            <Route path="dash" element={<StudDash />} />
+          </Route>
         </Route>
         <Route path="/admin" element={<LayoutB />}>
           <Route path="login" element={<Login />} />
