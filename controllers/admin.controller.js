@@ -250,7 +250,6 @@ export const admitStudent = async (req, res, next) => {
     }
 };
 
-// Helper functions
 const findStudentById = async (studentId) => {
     return await Student.findById(studentId);
 };

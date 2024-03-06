@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.post("/login", login);
 router.post("/signout", signout);
-//router.post("/signup", signup);
+router.post("/signup", verifyToken, signup);
 router.get("/incProspectusViews", incProspectusViews);
 router.get("/anylytics", verifyToken, anylytics);
 router.get("/demography", verifyToken, demography);
