@@ -92,5 +92,38 @@ export const sendEmailWithLogin = async (obj) => {
         console.error(`Error sending login details: ${error}`);
         return false;
     }
-}
+};
+
+export const sendEmailForRegistration = async (emailAddress) => {
+    try {
+        let defaultClient = brevo.ApiClient.instance;
+        let apiKey = defaultClient.authentications["api-key"];
+        apiKey.apiKey = process.env.BREVO_KEY;
+
+        let apiInstance = new brevo.TransactionalEmailsApi();
+        let sendSmtpEmail = new brevo.SendSmtpEmail();
+
+        sendSmtpEmail.sender = {
+            name: "EPCORN",
+            email: process.env.NO_REPLY_EMAIL,
+        };
+        sendSmtpEmail.to = [
+            { email: emailAddress }
+        ];
+        sendSmtpEmail.htmlContent = `
+                                        <h1>Thank you for registering to "Integrated Pest Management".</h1>
+                                        <p>We have received your application for IPM and will soon your application is under verification. we will get back to you as soon as possible. </p>    
+                                        <p>Thanking you, </p> 
+                                        <p>Serampore College & S Mark</p>               
+                                    `;
+        sendSmtpEmail.subject = "Application Request";
+
+        await apiInstance.sendTransacEmail(sendSmtpEmail);
+
+        return true; // Email sent successfully
+    } catch (error) {
+        console.error("Error sending email:", error);
+        return false; // Failed to send email
+    }
+};
 

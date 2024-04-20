@@ -3,7 +3,7 @@ import bcryptjs from "bcryptjs";
 import Student from "../models/student.model.js";
 import { errorHandler } from "../utils/error.js";
 import RegisteredStudent from "../models/registerd.student.model.js";
-import { sendEmailWithOtp } from "../services/emailService.js";
+import { sendEmailForRegistration, sendEmailWithOtp } from "../services/emailService.js";
 
 export const studentRegister = async (req, res, next) => {
     try {
@@ -19,13 +19,18 @@ export const studentRegister = async (req, res, next) => {
         } else {
             // Student update process
             if (!req.cookies.access_token) {
-                errorHandler(401, "Unauthorized");
+                return errorHandler(401, "Unauthorized");
             }
             const token = req.cookies.access_token;
             const studentId = verifyAuthToken(token);
 
+            if (form.paymentSS !== "") {
+                //send email to stuednet
+                await sendEmailForRegistration(form.email);
+            }
             const updatedStudent = await updateStudentDetails(studentId, form);
-            console.log(updatedStudent);
+
+
 
             res.status(200).json({ message: "Student details updated successfully", student: updatedStudent });
         }
