@@ -13,7 +13,7 @@ export const studentRegister = async (req, res, next) => {
             // Student registration process
             const newStudent = await Student.create({ details: form });
             const token = generateAuthToken(newStudent._id);
-
+            console.log(newStudent);
             setAccessTokenCookie(res, token);
             res.status(201).json({ message: "Student created", student: newStudent });
         } else {
@@ -25,6 +25,7 @@ export const studentRegister = async (req, res, next) => {
             const studentId = verifyAuthToken(token);
 
             const updatedStudent = await updateStudentDetails(studentId, form);
+            console.log(updatedStudent);
 
             res.status(200).json({ message: "Student details updated successfully", student: updatedStudent });
         }

@@ -26,7 +26,6 @@ const registeredStudentSchema = new mongoose.Schema({
         },
     }
 
-
 }, { timestamps: true });
 
 const RegisteredStudent = mongoose.model("RegisteredStudent", registeredStudentSchema);

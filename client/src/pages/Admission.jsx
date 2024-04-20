@@ -60,7 +60,8 @@ const Admission = () => {
     donePersonal: false,
     doneEducation: false,
     doneUpload: false,
-    donePayment: false
+    donePayment: false,
+    paymentSS: "",
   });
 
   const handleClick = (e) => {
@@ -92,7 +93,7 @@ const Admission = () => {
     }));
     setNext("Upload");
   };
-
+  console.log(form.paymentSS);
 
   const sendPostRequest = async () => {
     try {
@@ -127,7 +128,6 @@ const Admission = () => {
     try {
       // eslint-disable-next-line no-unused-vars
       setLoading(false);
-      setOpenModal(true);
       await sendPostRequest();
       toast.success("Application Submitted");
     } catch (error) {
@@ -1259,28 +1259,60 @@ const Admission = () => {
                   </label>
                   <button
                     className="mt-8 ml-20 rounded-lg bg-green-700 px-4 py-1 text-lg text-white hover:bg-blue-600"
-                    onClick={submitApplication}
+                    onClick={() => setOpenModal(true)}
                   >
-                    Submit
+                    Next
                   </button>
                 </div>
               </div>
             )}
           </div>
           <Modal dismissible show={openModal} onClose={() => setOpenModal(false)}>
-            <Modal.Header>Payment Gateway</Modal.Header>
+            <Modal.Header>Payment Details</Modal.Header>
             <Modal.Body>
-              <div className="space-y-6">
+              <div className="space-y-6 border border-gray-900 p-4 rounded-md">
                 <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-                  Link for the payment will be provided soon
+                  <span>Name :</span>
+                  <span>Serampore College Certificate course on Intigrated Pest Management </span>
                 </p>
+                <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                  <span>A/C :</span>
+                  <span>77910100008083</span>
+                </p>
+                <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                  <span>IFSC :</span>
+                  <span>BARBOVJSERA</span>
+                </p>
+              </div>
+
+              <div className='mt-5'>
+                <div className="w-64">
+                  <label
+                    className="text-sm font-medium leading-none text-gray-800"
+                    id="university"
+                  >
+                    Payment Screenshot
+                    <span className="text-red-500 required-dot ml-0.5">
+                      *
+                    </span>
+                  </label>
+                  <input
+                    type="file"
+                    className="mt-1"
+                    multiple
+                    onChange={(e) =>
+                      uploadDocument({ e, docName: "paymentSS" })
+                    }
+                  />
+                </div>
               </div>
             </Modal.Body>
             <Modal.Footer>
-              <Button onClick={() => setOpenModal(false)}>I accept</Button>
-              <Button color="gray" onClick={() => setOpenModal(false)}>
-                Decline
-              </Button>
+              {
+                form.paymentSS !== "" && (
+                  <Button onClick={() => [setOpenModal(false), submitApplication()]}>Sumit</Button>
+                )
+              }
             </Modal.Footer>
           </Modal>
         </div>

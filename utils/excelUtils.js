@@ -45,6 +45,7 @@ const generateExcelFile = async (students) => {
             { header: "10th marksheet", key: "marksheet10" },
             { header: "12th marksheet", key: "marksheet12" },
             { header: "Vocational Certification", key: "vocationalCerti" },
+            { header: "Payment Image", key: "paymentSS" },
         ];
 
         // Add rows and populate data
@@ -87,6 +88,7 @@ const generateExcelFile = async (students) => {
                 marksheet10: student.details.marksheet10,
                 marksheet12: student.details.marksheet12,
                 vocationalCerti: student.details.vocationalCerti,
+                paymentSS: student.details.paymentSS,
             });
         });
 
