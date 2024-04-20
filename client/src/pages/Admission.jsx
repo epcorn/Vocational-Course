@@ -1270,6 +1270,7 @@ const Admission = () => {
           <Modal dismissible show={openModal} onClose={() => setOpenModal(false)}>
             <Modal.Header>Payment Details</Modal.Header>
             <Modal.Body>
+              <p className=' text-center text-red-500'>Rs: 100/- APPLICATION FORM FEES</p>
               <div className="space-y-6 border border-gray-900 p-4 rounded-md">
                 <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
                   <span>Name :</span>
