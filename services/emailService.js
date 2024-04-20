@@ -112,7 +112,7 @@ export const sendEmailForRegistration = async (emailAddress) => {
         ];
         sendSmtpEmail.htmlContent = `
                                         <h1>Thank you for registering to "Integrated Pest Management".</h1>
-                                        <p>We have received your application for IPM and will soon your application is under verification. we will get back to you as soon as possible. </p>    
+                                        <p>We have received your application for IPM and your application is under verification. We will get back to you as soon as possible. </p>    
                                         <p>Thanking you, </p> 
                                         <p>Serampore College & S Mark</p>               
                                     `;
