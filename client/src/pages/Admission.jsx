@@ -93,7 +93,7 @@ const Admission = () => {
     }));
     setNext("Upload");
   };
-  console.log(form.paymentSS);
+
 
   const sendPostRequest = async () => {
     try {
@@ -303,12 +303,9 @@ const Admission = () => {
                           id="middleName"
                         >
                           Middle Name
-                          <span className="text-red-500 required-dot ml-0.5">
-                            *
-                          </span>
+
                         </label>
                         <input
-                          required
                           type="text"
                           value={form.middleName}
                           className="mt-3 w-full rounded border border-gray-200 bg-gray-100 p-3 text-sm font-medium leading-none text-gray-800 focus:border-gray-600 focus:outline-none"
@@ -1282,7 +1279,7 @@ const Admission = () => {
                 </p>
                 <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
                   <span>IFSC :</span>
-                  <span>BARBOVJSERA</span>
+                  <span>BARB0VJSERA</span>
                 </p>
               </div>
 

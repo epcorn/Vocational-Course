@@ -6,8 +6,21 @@ import logo1 from "../images/logo1.png";
 import logo2 from "../images/logo2.png";
 import guy from "../images/guy.png";
 import advantage from "../images/advantage.png";
+import { useEffect, useState } from 'react';
 
 export function Hero() {
+  const [links, setLinks] = useState(null);
+
+  useEffect(() => {
+    const fetchLinks = async () => {
+      const res = await fetch("/api/links");
+      const data = await res.json();
+      if (res.ok) {
+        setLinks(data);
+      }
+    };
+    fetchLinks();
+  }, []);
   return (
     <div className="relative pb-20 pt-10 sm:py-5">
       <div className="absolute inset-x-0 -bottom-14 -top-48 overflow-hidden bg-indigo-50">
@@ -129,7 +142,7 @@ export function Hero() {
             </ul>
           </div>
           <Button
-            href="https://res.cloudinary.com/epcorn/image/upload/v1701753414/signature/Skill_Based_Development_Course_13_q3wv2t.pdf"
+            href={links?.prospectus.link}
             className="mt-10 w-full bg-green-500 sm:hidden"
           >
             Prospectus
