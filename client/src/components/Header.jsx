@@ -38,7 +38,7 @@ export function Header() {
           </div>
         </div>
         <div className="flex gap-3">
-          <div className="hidden sm:mt-10 sm:flex lg:mt-0 lg:grow lg:basis-0 lg:justify-end">
+          <div className=" mt-10 flex lg:mt-0 lg:grow lg:basis-0 lg:justify-end">
             <a href={links?.prospectus.link} target="_blank" rel="noopener noreferrer">
               <Button
                 className="bg-pink-500 hover:bg-pink-400"
@@ -48,10 +48,10 @@ export function Header() {
               </Button>
             </a>
           </div>
-          <div className="hidden sm:mt-10 sm:flex lg:mt-0 lg:grow lg:basis-0 lg:justify-end">
+          <div className=" mt-10 flex lg:mt-0 lg:grow lg:basis-0 lg:justify-end">
             <StudentBtn />
           </div>
-          <div className="hidden sm:mt-10 sm:flex lg:mt-0 lg:grow lg:basis-0 lg:justify-end">
+          <div className="mt-10 flex lg:mt-0 lg:grow lg:basis-0 lg:justify-end">
             <MeritListBtn links={links?.meritList} />
           </div>
           {

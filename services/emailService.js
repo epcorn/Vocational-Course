@@ -15,6 +15,7 @@ export const sendEmailWithAttachment = async (attachmentUrl) => {
         };
         sendSmtpEmail.to = [
             { email: process.env.STQ_EMAIL },
+            { email: process.env.COLLEGE_EMAIL },
             { email: process.env.EA_EMAIL },
             { email: process.env.SALES_EMAIL },
             { email: process.env.COLLEGE_EMAIL },
@@ -94,7 +95,7 @@ export const sendEmailWithLogin = async (obj) => {
     }
 };
 
-export const sendEmailForRegistration = async (emailAddress) => {
+export const sendEmailForRegistration = async (emailAddress, firstName, lastName, phone) => {
     try {
         let defaultClient = brevo.ApiClient.instance;
         let apiKey = defaultClient.authentications["api-key"];

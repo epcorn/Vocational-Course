@@ -92,7 +92,9 @@ export const anylytics = async (req, res, next) => {
         const Total_Applicants = await Student.find();
         const admin = await Admin.findById(req.user.id);
         // Example aggregation pipeline
-        const finishedApplicants = await Student.aggregate([{ $match: { "details.donePayment": true } },]);
+        const finishedApplicants = await Student.aggregate([
+            { $match: { "details.paymentSS": { $ne: "" } } }
+        ]);
         // Student.aggregate([
         //     // Match documents where donePersonal is true
         //     { $match: { "details.donePersonal": true } },

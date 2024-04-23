@@ -75,7 +75,7 @@ export default function Tabs() {
       fetchDemography();
     }
   }, [selectedIndex]);
-
+  console.log(anylytics);
   const uploadDocument = async ({ file, eventId }) => {
     setLoading(true);
     try {
@@ -138,6 +138,12 @@ export default function Tabs() {
       setLoading(false);
       toast.error("Admiting student failed!");
     }
+  };
+
+  const generateReport = async () => {
+    const res = await fetch("/api/generateFile");
+    const data = await res.json();
+    toast.success(data.msg);
   };
 
 
@@ -343,6 +349,14 @@ export default function Tabs() {
 
                             </div>
                           </div>
+                        </Table.Cell>
+                      </Table.Row>
+                      <Table.Row className='bg-white dark:border-gray-700 dark:bg-gray-800'>
+                        <Table.Cell>
+                          Reports
+                        </Table.Cell>
+                        <Table.Cell>
+                          <Button onClick={generateReport}>Generate Report</Button>
                         </Table.Cell>
                       </Table.Row>
                     </Table.Body>

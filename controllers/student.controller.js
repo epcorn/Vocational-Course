@@ -13,7 +13,6 @@ export const studentRegister = async (req, res, next) => {
             // Student registration process
             const newStudent = await Student.create({ details: form });
             const token = generateAuthToken(newStudent._id);
-            console.log(newStudent);
             setAccessTokenCookie(res, token);
             res.status(201).json({ message: "Student created", student: newStudent });
         } else {
@@ -26,7 +25,7 @@ export const studentRegister = async (req, res, next) => {
 
             if (form.paymentSS !== "") {
                 //send email to stuednet
-                await sendEmailForRegistration(form.email);
+                await sendEmailForRegistration(form.email, form.firstName, form.lastName, form.phone);
             }
             const updatedStudent = await updateStudentDetails(studentId, form);
 

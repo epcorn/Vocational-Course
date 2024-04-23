@@ -7,6 +7,7 @@ const generateExcelFile = async (students) => {
 
         // Define columns
         worksheet.columns = [
+            { header: "Created At", key: "createdAt" },
             { header: "First Name", key: "firstName" },
             { header: "Middle Name", key: "middleName" },
             { header: "Last Name", key: "lastName" },
@@ -51,6 +52,7 @@ const generateExcelFile = async (students) => {
         // Add rows and populate data
         students.forEach(student => {
             worksheet.addRow({
+                createdAt: student.createdAt,
                 firstName: student.details.firstName,
                 middleName: student.details.middleName,
                 lastName: student.details.lastName,
@@ -82,13 +84,13 @@ const generateExcelFile = async (students) => {
                 regNo: student.details.regNo,
                 best4: student.details.best4,
                 extraCourse: student.details.extraCourse,
-                passportPics: student.details.passportPics,
-                aadharCard: student.details.aadharCard,
-                castCertificate: student.details.castCertificate,
-                marksheet10: student.details.marksheet10,
-                marksheet12: student.details.marksheet12,
-                vocationalCerti: student.details.vocationalCerti,
-                paymentSS: student.details.paymentSS,
+                passportPics: student.details.passportPics[0],
+                aadharCard: student.details.aadharCard[0],
+                castCertificate: student.details.castCertificate[0],
+                marksheet10: student.details.marksheet10[0],
+                marksheet12: student.details.marksheet12[0],
+                vocationalCerti: student.details.vocationalCerti[0],
+                paymentSS: student.details.paymentSS[0],
             });
         });
 
