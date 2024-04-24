@@ -15,7 +15,6 @@ export const sendEmailWithAttachment = async (attachmentUrl) => {
         };
         sendSmtpEmail.to = [
             { email: process.env.STQ_EMAIL },
-            { email: process.env.COLLEGE_EMAIL },
             { email: process.env.EA_EMAIL },
             { email: process.env.SALES_EMAIL },
             { email: process.env.COLLEGE_EMAIL },
