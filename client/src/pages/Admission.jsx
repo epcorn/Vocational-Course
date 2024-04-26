@@ -1242,12 +1242,12 @@ const Admission = () => {
                   <h1 className="text-center text-2xl font-medium leading-5 text-gray-800">
                     Payment
                   </h1>
-                  <h2 className='text-center text-lg font-medium text-red-500 mt-1'>Application Form Fees Rs. 100/- will be collected after confirmation of applicant on 15th May 2024</h2>
+                  <h2 className='text-center text-lg font-medium text-red-500 mt-4 p-2'>Application Form Fees Rs. 100/- will be collected after confirmation of applicant on 15th May 2024</h2>
                   <label className="my-5 mb-3 flex w-[420px] space-x-2">
                     <input
                       type="checkbox"
                       name="policy"
-                      onClick={() => setPolicy(true)}
+                      onClick={() => setPolicy(prev => !prev)}
                       className="form-tick bg-check mr-3 mt-1 h-5 w-12 appearance-none rounded-md border border-gray-300 bg-white checked:border-transparent checked:bg-green-600 focus:outline-none"
                     />
                     <span className="font-normal">
@@ -1266,7 +1266,7 @@ const Admission = () => {
                     if (!policy) { return toast.error("Please acknowledge the policy and then submit"); } else {
                       return submitApplication();
                     }
-                  }}>Sumit</Button>
+                  }}>Submit</Button>
 
                 </div>
               </div>
@@ -1316,7 +1316,7 @@ const Admission = () => {
             <Modal.Footer>
               {
                 form.paymentSS !== "" && (
-                  <Button onClick={() => [setOpenModal(false), submitApplication()]}>Sumit</Button>
+                  <Button onClick={() => [setOpenModal(false), submitApplication()]}>Submit</Button>
                 )
               }
             </Modal.Footer>
