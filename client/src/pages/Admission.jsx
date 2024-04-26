@@ -63,6 +63,7 @@ const Admission = () => {
     donePayment: false,
     paymentSS: "",
   });
+  const [policy, setPolicy] = useState(false);
 
   const handleClick = (e) => {
     e.preventDefault();
@@ -200,8 +201,7 @@ const Admission = () => {
           <div className="bg-gray-100 py-5">
 
             <h1 className="text-c#c026d3 pb-5 text-center text-lg font-semibold text-teal-700">
-              Application form for admission to Pest Control Application
-              Technology
+              Application Form for admission to Integrated Pest Management
             </h1>
             <div className={`flex flex-wrap items-center justify-center`}>
               <div className="relative mt-4 h-16 w-52 md:mt-0">
@@ -1242,10 +1242,12 @@ const Admission = () => {
                   <h1 className="text-center text-2xl font-medium leading-5 text-gray-800">
                     Payment
                   </h1>
+                  <h2 className='text-center text-lg font-medium text-red-500 mt-1'>Application Form Fees Rs. 100/- will be collected after confirmation of applicant on 15th May 2024</h2>
                   <label className="my-5 mb-3 flex w-[420px] space-x-2">
                     <input
                       type="checkbox"
-                      name="checked-demo"
+                      name="policy"
+                      onClick={() => setPolicy(true)}
                       className="form-tick bg-check mr-3 mt-1 h-5 w-12 appearance-none rounded-md border border-gray-300 bg-white checked:border-transparent checked:bg-green-600 focus:outline-none"
                     />
                     <span className="font-normal">
@@ -1254,12 +1256,18 @@ const Admission = () => {
                       and belief.
                     </span>
                   </label>
-                  <button
+                  {/* <button
                     className="mt-8 ml-20 rounded-lg bg-green-700 px-4 py-1 text-lg text-white hover:bg-blue-600"
                     onClick={() => setOpenModal(true)}
                   >
                     Next
-                  </button>
+                  </button> */}
+                  <Button className="mt-8 ml-20 rounded-lg bg-green-700 px-4 py-1 text-lg text-white hover:bg-blue-600" onClick={() => {
+                    if (!policy) { return toast.error("Please acknowledge the policy and then submit"); } else {
+                      return submitApplication();
+                    }
+                  }}>Sumit</Button>
+
                 </div>
               </div>
             )}
