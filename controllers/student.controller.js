@@ -29,6 +29,10 @@ export const studentRegister = async (req, res, next) => {
             }
             const updatedStudent = await updateStudentDetails(studentId, form);
 
+            if (!updatedStudent) {
+                res.clearCookie("access_token");
+                return res.status(404).json({ message: "Registration failed, please clear your cookies" });
+            }
 
 
             res.status(200).json({ message: "Student details updated successfully", student: updatedStudent });
@@ -142,7 +146,8 @@ const generateAuthToken = (studentId) => {
 };
 
 const setAccessTokenCookie = (res, token) => {
-    const expirationDate = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+    const expiryDate = new Date();
+    expiryDate.setDate(expiryDate.getDate() + 1);
     res.cookie("access_token", token, { httpOnly: true });
 };
 
@@ -156,17 +161,21 @@ const verifyAuthToken = (token) => {
 };
 
 const updateStudentDetails = async (studentId, form) => {
+    console.log(studentId);
+    const stud = await Student.findById(studentId);
+
+    if (!stud) {
+        return null;
+    }
+
     const updatedStudent = await Student.findByIdAndUpdate(
         studentId,
         { details: form },
         { new: true, runValidators: true }
     );
 
-    if (!updatedStudent) {
-        errorHandler(404, "Student not found");
-    }
-
     return updatedStudent;
 };
+
 
 
