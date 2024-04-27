@@ -139,6 +139,19 @@ export default function Tabs() {
       toast.error("Admiting student failed!");
     }
   };
+  const handleDel = async (id) => {
+    try {
+      setLoading(true);
+      const res = await axios.get(`/api/admins/delStud/${id}`);
+      const updated = totalApplicants.filter(item => item._id !== id);
+      setTotalApplicants(updated);
+      setLoading(false);
+      toast.success(res.data.message);
+    } catch (error) {
+      setLoading(false);
+      toast.error("Admiting student failed!");
+    }
+  };
 
   const generateReport = async () => {
     const res = await fetch("/api/generateFile");
@@ -417,6 +430,12 @@ export default function Tabs() {
                     >
                       {t.details.enrolled ? "Admited" : "Admit"}
                     </Button>
+                    {/* <Button
+                      className={`bg-red-500 hover:bg-red-400 rounded-md p-1  m-2 shadow-md text-black w-full ${t.details.enrolled ? "bg-green-400 hover:bg-green-300" : ""}`}
+                      onClick={() => handleDel(t._id)}
+                    >
+                      Delete
+                    </Button> */}
                   </Table.Cell>
 
                 </Table.Row>

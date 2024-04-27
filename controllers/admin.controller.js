@@ -252,6 +252,20 @@ export const admitStudent = async (req, res, next) => {
     }
 };
 
+export const deleteStudent = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const deletedStudent = await Student.deleteOne({ _id: id });
+        if (deleteStudent) {
+            return res.status(200).json({ message: "Student Deleted" });
+        } else {
+            return res.status(400).json({ message: "Sudent deletion failure" });
+        }
+    } catch (error) {
+        next(error);
+    }
+};
+
 const findStudentById = async (studentId) => {
     return await Student.findById(studentId);
 };

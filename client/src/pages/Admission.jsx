@@ -1251,9 +1251,7 @@ const Admission = () => {
                       className="form-tick bg-check mr-3 mt-1 h-5 w-12 appearance-none rounded-md border border-gray-300 bg-white checked:border-transparent checked:bg-green-600 focus:outline-none"
                     />
                     <span className="font-normal">
-                      Hereby i declare that the information & documents provided
-                      are true, complete and correct to the best of my knowledge
-                      and belief.
+                      I hereby declare that the information & documents provided are true, complete and correct to the best of my knowledge and belief.
                     </span>
                   </label>
                   {/* <button
