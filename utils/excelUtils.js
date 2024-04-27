@@ -1,6 +1,6 @@
 import exceljs from "exceljs";
 
-const generateExcelFile = async (students) => {
+const generateExcelFile = async (students, visitors) => {
     try {
         const workbook = new exceljs.Workbook();
         let worksheet = workbook.addWorksheet("Sheet1");
@@ -90,7 +90,22 @@ const generateExcelFile = async (students) => {
                 marksheet10: student.details.marksheet10[0],
                 marksheet12: student.details.marksheet12[0],
                 vocationalCerti: student.details.vocationalCerti[0],
-                paymentSS: student.details.paymentSS[0],
+                paymentSS: student.details.paymentSS,
+            });
+        });
+
+        let visitorWorksheet = workbook.addWorksheet("Visitors");
+        visitorWorksheet.columns = [
+            { header: "Created At", key: "createdAt" },
+            { header: "Email", key: "email" },
+            { header: "Phone", key: "phone" },
+        ];
+
+        visitors.forEach(visitor => {
+            visitorWorksheet.addRow({
+                createdAt: visitor.createdAt,
+                email: visitor.email,
+                phone: visitor.phone,
             });
         });
 

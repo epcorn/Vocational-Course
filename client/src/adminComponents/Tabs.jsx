@@ -430,12 +430,12 @@ export default function Tabs() {
                     >
                       {t.details.enrolled ? "Admited" : "Admit"}
                     </Button>
-                    {/* <Button
+                    <Button
                       className={`bg-red-500 hover:bg-red-400 rounded-md p-1  m-2 shadow-md text-black w-full ${t.details.enrolled ? "bg-green-400 hover:bg-green-300" : ""}`}
                       onClick={() => handleDel(t._id)}
                     >
                       Delete
-                    </Button> */}
+                    </Button>
                   </Table.Cell>
 
                 </Table.Row>

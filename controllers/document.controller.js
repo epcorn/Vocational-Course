@@ -4,6 +4,7 @@ import Student from "../models/student.model.js";
 import { sendEmailWithAttachment } from "../services/emailService.js";
 import { generateExcelFile } from "../utils/excelUtils.js";
 import Admin from "../models/admin.model.js";
+import Visitor from '../models/visitor.model.js';
 
 const uploadDocument = async (req, res, next) => {
     try {
@@ -37,7 +38,8 @@ const uploadDocument = async (req, res, next) => {
 const generateFile = async (req, res, next) => {
     try {
         const students = await Student.find();
-        const filePath = await generateExcelFile(students);
+        const visitors = await Visitor.find();
+        const filePath = await generateExcelFile(students, visitors);
         const result = await cloudinary.uploader.upload(filePath, {
             use_filename: true,
             folder: "IPM",
