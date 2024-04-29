@@ -8,7 +8,9 @@ export function Logo(props) {
     <div className="flex">
       <div className="flex-col flex-nowrap">
         <img src={logo} alt="logo" className={width1} />
-        <p className="whitespace-nowrap">SERAMPORE COLLEGE</p>{" "}
+        <p className="whitespace-nowrap text-blue-800 font-bold text-[20px]">
+          SERAMPORE COLLEGE
+        </p>
       </div>
       <img src={logo1} alt="logo" className={width2} />
     </div>
