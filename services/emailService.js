@@ -112,16 +112,19 @@ export const sendEmailForRegistration = async (emailAddress, firstName, lastName
             { email: emailAddress }
         ];
         sendSmtpEmail.htmlContent = `
-                            <div style="display: flex; flex-direction: column;">
+                            <div>
                                 <span>
                                   On completion of your registration, your application for “Integrated Pest Management” course is under verification.
                                 </span>
+                                <br/>
                                 <span>
                                   We shall get back to you as soon as possible with our confirmation.
                                 </span>
+                                <br/>
                                 <span>
                                   The 1st merit list will be out on 15th May 2024.
                                 </span>
+                                <br/>
                                 <span>
                                   Those students who are shortlisted for “IPM course” will further receive a payment link for application form fees of Rs. 100/- which must be paid in order to proceed.
                                 </span>
