@@ -112,18 +112,21 @@ export const sendEmailForRegistration = async (emailAddress, firstName, lastName
             { email: emailAddress }
         ];
         sendSmtpEmail.htmlContent = `
-                                        <p>
-                                        On completion of your registration, your application for “Integrated Pest Management” course is under verification.
-                                        </p>
-                                        <p>
-                                        We shall get back to you as soon as possible with our confirmation.
-                                        </p>
-                                        <p>
-                                        The 1st merit list will be out on 15th May 2024.
-                                        </p>
-                                        <p>
-                                        Those students who are shortlisted for “IPM course” will further receive a payment link for application form fees of Rs. 100/- which must be paid in order to proceed
-                                        </p>               
+                            <div style="display: flex; flex-direction: column;">
+                                <span>
+                                  On completion of your registration, your application for “Integrated Pest Management” course is under verification.
+                                </span>
+                                <span>
+                                  We shall get back to you as soon as possible with our confirmation.
+                                </span>
+                                <span>
+                                  The 1st merit list will be out on 15th May 2024.
+                                </span>
+                                <span>
+                                  Those students who are shortlisted for “IPM course” will further receive a payment link for application form fees of Rs. 100/- which must be paid in order to proceed.
+                                </span>
+                            </div>
+                    
                                     `
         sendSmtpEmail.subject = "Welcome to “Integrated Pest Management” Course.";
 
