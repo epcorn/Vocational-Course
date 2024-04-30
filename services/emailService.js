@@ -129,6 +129,13 @@ export const sendEmailForRegistration = async (emailAddress, firstName, lastName
                                   Those students who are shortlisted for “IPM course” will further receive a payment link for application form fees of Rs. 100/- which must be paid in order to proceed.
                                 </span>
                             </div>
+                            <br/>
+                            <br/>
+                            <p>
+                            <b>Thanking you</b>
+                            </br>
+                            <b>Serampore College & S Mark</b>
+                            </p>
                     
                                     `
         sendSmtpEmail.subject = "Welcome to “Integrated Pest Management” Course.";
