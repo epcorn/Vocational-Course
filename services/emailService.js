@@ -112,12 +112,14 @@ export const sendEmailForRegistration = async (emailAddress, firstName, lastName
             { email: emailAddress }
         ];
         sendSmtpEmail.htmlContent = `
-                                        <h1>Thank you for registering to "Integrated Pest Management".</h1>
-                                        <p>We have received your application for IPM and your application is under verification. We will get back to you as soon as possible. </p>    
-                                        <p>Thanking you, </p> 
-                                        <p>Serampore College & S Mark</p>               
-                                    `;
-        sendSmtpEmail.subject = "Application Request";
+                                        <p>
+                                        On completion of your registration, your application for “Integrated Pest Management” course is under verification.
+                                        We shall get back to you as soon as possible with our confirmation.
+                                        The 1st merit list will be out on 15th May 2024.
+                                        Those students who are shortlisted for “IPM course” will further receive a payment link for application form fees of Rs. 100/- which must be paid in order to proceed
+                                        </p>               
+                                    `
+        sendSmtpEmail.subject = "Welcome to “Integrated Pest Management” Course.";
 
         await apiInstance.sendTransacEmail(sendSmtpEmail);
 
