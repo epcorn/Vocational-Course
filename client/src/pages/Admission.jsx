@@ -9,12 +9,15 @@ import { Modal } from "flowbite-react";
 import { Button } from "../components/Button";
 import useLocalStorage from "../customHooks/useLocalStorage";
 
-
 const Admission = () => {
   const [next, setNext] = useState("Personal Information");
   const [isLoading, setLoading] = useState(false);
   const [openModal, setOpenModal] = useState(false);
-  const [impInfo, setImpInfo] = useState({ firstName: "", email: "", phone: "" });
+  const [impInfo, setImpInfo] = useState({
+    firstName: "",
+    email: "",
+    phone: "",
+  });
   const [form, setForm] = useLocalStorage("form", {
     firstName: "",
     middleName: "",
@@ -74,7 +77,6 @@ const Admission = () => {
     if (e.target.name === "prev") {
       setNext("Personal Information");
     }
-
   };
 
   const handlePersonalForm = (e) => {
@@ -95,27 +97,32 @@ const Admission = () => {
     setNext("Upload");
   };
 
-
   const sendPostRequest = async () => {
     try {
-      const response = await axios.post('/api/students/studentRegister', {
-        form
+      await axios.post("/api/students/studentRegister", {
+        form,
       });
-      console.log('Response:', response.data);
     } catch (error) {
-      console.error('Error:', error.message);
+      console.error("Error:", error.message);
+    }
+  };
+  const finalPostRequest = async () => {
+    try {
+      await axios.post("/api/students/finalRegister", {
+        form,
+      });
+    } catch (error) {
+      console.error("Error:", error.message);
     }
   };
 
   useEffect(() => {
     const sendData = setTimeout(() => {
-      axios.post('/api/students/studentRegister', { form });
+      axios.post("/api/students/studentRegister", { form });
     }, 3000);
     return () => clearTimeout(sendData);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [impInfo]);
-
-
 
   const handleToEducation = (e) => {
     e.preventDefault();
@@ -138,16 +145,29 @@ const Admission = () => {
     }
   };
 
+  const finalSubmit = async () => {
+    setLoading(true);
+    try {
+      // eslint-disable-next-line no-unused-vars
+      setLoading(false);
+      await finalPostRequest();
+      toast.success("Application Submitted");
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+      toast.error("There is some error, try again later");
+    }
+  };
+
   const handleUploadDocuments = () => {
     if (
       !form.marksheet10.length ||
-      form.percentage12 !== "" && !form.marksheet12.length ||
-      form.graduationPercentage !== "" && !form.marksheetGraduation.length ||
+      (form.percentage12 !== "" && !form.marksheet12.length) ||
+      (form.graduationPercentage !== "" && !form.marksheetGraduation.length) ||
       !form.aadharCard.length ||
       !form.passportPics.length ||
-      form.caste != "General" && !form.castCertificate.length
+      (form.caste != "General" && !form.castCertificate.length)
     ) {
-
       toast.error("Please upload all the required documents");
       return;
     }
@@ -170,7 +190,6 @@ const Admission = () => {
 
       const res = await axios.post("/api/documentUpload", form);
 
-
       setForm((prev) => ({ ...prev, [docName]: res.data.imageLinks }));
       setLoading(false);
       toast.success("Document Uploaded");
@@ -184,11 +203,11 @@ const Admission = () => {
   function handleImpInfoChange(e) {
     setForm((prev) => ({
       ...prev,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     }));
     setImpInfo((prev) => ({
       ...prev,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     }));
   }
 
@@ -199,18 +218,23 @@ const Admission = () => {
       <div className="flex items-center justify-center">
         <div className="w-full px-8 xl:w-10/12">
           <div className="bg-gray-100 py-5">
-
             <h1 className="text-c#c026d3 pb-5 text-center text-lg font-semibold text-teal-700">
               Application Form for admission to Integrated Pest Management
             </h1>
             <div className={`flex flex-wrap items-center justify-center`}>
               <div className="relative mt-4 h-16 w-52 md:mt-0">
                 <img
-                  src={`${form.donePersonal ? "https://i.ibb.co/wNZ4nzy/Steps2.png" : "https://i.ibb.co/c2k4Gbr/Steps3.png"}`}
+                  src={`${
+                    form.donePersonal
+                      ? "https://i.ibb.co/wNZ4nzy/Steps2.png"
+                      : "https://i.ibb.co/c2k4Gbr/Steps3.png"
+                  }`}
                   alt="step1"
                   className="h-full w-full"
                 />
-                <div className={`absolute inset-0 m-0 flex w-full flex-col items-center justify-center px-6 ${form.donePersonal}`}>
+                <div
+                  className={`absolute inset-0 m-0 flex w-full flex-col items-center justify-center px-6 ${form.donePersonal}`}
+                >
                   <p className="w-full text-sm font-medium leading-4">
                     Sign Up
                   </p>
@@ -221,7 +245,11 @@ const Admission = () => {
               </div>
               <div className="relative mt-4 h-16 w-52 md:mt-0">
                 <img
-                  src={`${form.doneEducation ? "https://i.ibb.co/wNZ4nzy/Steps2.png" : "https://i.ibb.co/c2k4Gbr/Steps3.png"}`}
+                  src={`${
+                    form.doneEducation
+                      ? "https://i.ibb.co/wNZ4nzy/Steps2.png"
+                      : "https://i.ibb.co/c2k4Gbr/Steps3.png"
+                  }`}
                   alt="step2"
                   className="h-full w-full"
                 />
@@ -236,7 +264,11 @@ const Admission = () => {
               </div>
               <div className="relative mt-4 h-16 w-52 md:mt-0">
                 <img
-                  src={`${form.doneUpload ? "https://i.ibb.co/wNZ4nzy/Steps2.png" : "https://i.ibb.co/c2k4Gbr/Steps3.png"}`}
+                  src={`${
+                    form.doneUpload
+                      ? "https://i.ibb.co/wNZ4nzy/Steps2.png"
+                      : "https://i.ibb.co/c2k4Gbr/Steps3.png"
+                  }`}
                   alt="step3"
                   className="h-full w-full"
                 />
@@ -251,7 +283,11 @@ const Admission = () => {
               </div>
               <div className="relative mt-4 h-16 w-52 lg:mt-0">
                 <img
-                  src={`${form.donePayment ? "https://i.ibb.co/wNZ4nzy/Steps2.png" : "https://i.ibb.co/c2k4Gbr/Steps3.png"}`}
+                  src={`${
+                    form.donePayment
+                      ? "https://i.ibb.co/wNZ4nzy/Steps2.png"
+                      : "https://i.ibb.co/c2k4Gbr/Steps3.png"
+                  }`}
                   alt="step4"
                   className="h-full w-full"
                 />
@@ -268,7 +304,7 @@ const Admission = () => {
           </div>
           <div className="xl:px-24">
             {next === "Personal Information" ? (
-              <form onSubmit={handlePersonalForm} >
+              <form onSubmit={handlePersonalForm}>
                 <h1 className="my-8 pr-2 text-center text-2xl font-medium leading-5 text-gray-800">
                   Personal Information
                 </h1>
@@ -303,7 +339,6 @@ const Admission = () => {
                           id="middleName"
                         >
                           Middle Name
-
                         </label>
                         <input
                           type="text"
@@ -849,7 +884,6 @@ const Admission = () => {
                       <div className="pl-10  md:w-48">
                         <label className="text-sm leading-none text-gray-800">
                           10+2 Percentage
-
                         </label>
                         <input
                           type="number"
@@ -868,7 +902,6 @@ const Admission = () => {
                       <div className="ml-10 md:w-52">
                         <label className="text-sm leading-none text-gray-800">
                           10+2 Board Name
-
                         </label>
                         <input
                           type="text"
@@ -886,9 +919,7 @@ const Admission = () => {
                     </div>
                     <div className="items-center md:flex lg:mb-8">
                       <div className="md:w-52">
-                        <label
-                          className="text-sm leading-none text-gray-800"
-                        >
+                        <label className="text-sm leading-none text-gray-800">
                           Graduation Percentage
                         </label>
                         <input
@@ -905,9 +936,7 @@ const Admission = () => {
                         />
                       </div>
                       <div className="ml-10 md:w-56">
-                        <label
-                          className="text-sm leading-none text-gray-800"
-                        >
+                        <label className="text-sm leading-none text-gray-800">
                           Graduation University Name
                         </label>
                         <input
@@ -930,7 +959,6 @@ const Admission = () => {
                         <label className="text-sm leading-none text-gray-800">
                           Name of the last University / Council / Board
                           Examination passed
-
                         </label>
                         <input
                           type="text"
@@ -948,7 +976,6 @@ const Admission = () => {
                       <div className="ml-10 md:w-64">
                         <label className="text-sm leading-none text-gray-800">
                           Year Of Passing
-
                         </label>
                         <input
                           type="text"
@@ -1056,8 +1083,6 @@ const Admission = () => {
                         Next
                       </button>
                     </div>
-
-
                   </div>
                 </div>
               </form>
@@ -1127,13 +1152,15 @@ const Admission = () => {
                               className="mt-1"
                               multiple
                               onChange={(e) =>
-                                uploadDocument({ e, docName: "castCertificate" })
+                                uploadDocument({
+                                  e,
+                                  docName: "castCertificate",
+                                })
                               }
                             />
                           </div>
                         </div>
                       )}
-
                     </div>
                     <div className="items-center md:flex lg:mt-8">
                       <div className="w-64">
@@ -1176,27 +1203,31 @@ const Admission = () => {
                           />
                         </div>
                       )}
-                      {form.graduationPercentage != "" && (<div className="ml-10 md:w-64">
-                        <div className="w-64">
-                          <label
-                            className="text-sm font-medium leading-none text-gray-800"
-                            id="university"
-                          >
-                            Graduation Marksheet
-                            <span className="text-red-500 required-dot ml-0.5">
-                              *
-                            </span>
-                          </label>
-                          <input
-                            type="file"
-                            className="mt-1"
-                            multiple
-                            onChange={(e) =>
-                              uploadDocument({ e, docName: "marksheetGraduation" })
-                            }
-                          />
+                      {form.graduationPercentage != "" && (
+                        <div className="ml-10 md:w-64">
+                          <div className="w-64">
+                            <label
+                              className="text-sm font-medium leading-none text-gray-800"
+                              id="university"
+                            >
+                              Graduation Marksheet
+                              <span className="text-red-500 required-dot ml-0.5">
+                                *
+                              </span>
+                            </label>
+                            <input
+                              type="file"
+                              className="mt-1"
+                              multiple
+                              onChange={(e) =>
+                                uploadDocument({
+                                  e,
+                                  docName: "marksheetGraduation",
+                                })
+                              }
+                            />
+                          </div>
                         </div>
-                      </div>
                       )}
                     </div>
                     <div className="md:w-64 mt-8">
@@ -1232,7 +1263,6 @@ const Admission = () => {
                         Next
                       </button>
                     </div>
-
                   </div>
                 </div>
               </>
@@ -1242,16 +1272,21 @@ const Admission = () => {
                   <h1 className="text-center text-2xl font-medium leading-5 text-gray-800">
                     Payment
                   </h1>
-                  <h2 className='text-center text-lg font-medium text-red-500 mt-4 p-2'>Application Form Fees Rs. 100/- will be collected after confirmation of applicant on 15th May 2024</h2>
+                  <h2 className="text-center text-lg font-medium text-red-500 mt-4 p-2">
+                    Application Form Fees Rs. 100/- will be collected after
+                    confirmation of applicant on 15th May 2024
+                  </h2>
                   <label className="my-5 mb-3 flex w-[420px] space-x-2">
                     <input
                       type="checkbox"
                       name="policy"
-                      onClick={() => setPolicy(prev => !prev)}
+                      onClick={() => setPolicy((prev) => !prev)}
                       className="form-tick bg-check mr-3 mt-1 h-5 w-12 appearance-none rounded-md border border-gray-300 bg-white checked:border-transparent checked:bg-green-600 focus:outline-none"
                     />
                     <span className="font-normal">
-                      I hereby declare that the information & documents provided are true, complete and correct to the best of my knowledge and belief.
+                      I hereby declare that the information & documents provided
+                      are true, complete and correct to the best of my knowledge
+                      and belief.
                     </span>
                   </label>
                   {/* <button
@@ -1260,24 +1295,41 @@ const Admission = () => {
                   >
                     Next
                   </button> */}
-                  <Button className="mt-8 ml-20 rounded-lg bg-green-700 px-4 py-1 text-lg text-white hover:bg-blue-600" onClick={() => {
-                    if (!policy) { return toast.error("Please acknowledge the policy and then submit"); } else {
-                      return submitApplication();
-                    }
-                  }}>Submit</Button>
-
+                  <Button
+                    className="mt-8 ml-20 rounded-lg bg-green-700 px-4 py-1 text-lg text-white hover:bg-blue-600"
+                    onClick={() => {
+                      if (!policy) {
+                        return toast.error(
+                          "Please acknowledge the policy and then submit"
+                        );
+                      } else {
+                        return finalSubmit();
+                      }
+                    }}
+                  >
+                    Submit
+                  </Button>
                 </div>
               </div>
             )}
           </div>
-          <Modal dismissible show={openModal} onClose={() => setOpenModal(false)}>
+          <Modal
+            dismissible
+            show={openModal}
+            onClose={() => setOpenModal(false)}
+          >
             <Modal.Header>Payment Details</Modal.Header>
             <Modal.Body>
-              <p className=' text-center text-red-500'>Rs: 100/- APPLICATION FORM FEES</p>
+              <p className=" text-center text-red-500">
+                Rs: 100/- APPLICATION FORM FEES
+              </p>
               <div className="space-y-6 border border-gray-900 p-4 rounded-md">
                 <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
                   <span>Name :</span>
-                  <span>Serampore College Certificate course on Intigrated Pest Management </span>
+                  <span>
+                    Serampore College Certificate course on Intigrated Pest
+                    Management{" "}
+                  </span>
                 </p>
                 <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
                   <span>A/C :</span>
@@ -1289,16 +1341,14 @@ const Admission = () => {
                 </p>
               </div>
 
-              <div className='mt-5'>
+              <div className="mt-5">
                 <div className="w-64">
                   <label
                     className="text-sm font-medium leading-none text-gray-800"
                     id="university"
                   >
                     Payment Screenshot
-                    <span className="text-red-500 required-dot ml-0.5">
-                      *
-                    </span>
+                    <span className="text-red-500 required-dot ml-0.5">*</span>
                   </label>
                   <input
                     type="file"
@@ -1312,11 +1362,13 @@ const Admission = () => {
               </div>
             </Modal.Body>
             <Modal.Footer>
-              {
-                form.paymentSS !== "" && (
-                  <Button onClick={() => [setOpenModal(false), submitApplication()]}>Submit</Button>
-                )
-              }
+              {form.paymentSS !== "" && (
+                <Button
+                  onClick={() => [setOpenModal(false), submitApplication()]}
+                >
+                  Submit
+                </Button>
+              )}
             </Modal.Footer>
           </Modal>
         </div>

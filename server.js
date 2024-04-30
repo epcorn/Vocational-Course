@@ -4,6 +4,7 @@ import fileUpload from "express-fileupload";
 import cors from "cors";
 import path from "path";
 import cookeParser from "cookie-parser";
+import cron from "node-cron";
 import rootRouter from "./routes/index.js";
 import connectDB from "./config/mongoose.js";
 import { uploadDocument, generateFile, getLinks } from "./controllers/document.controller.js";
@@ -44,3 +45,8 @@ app.use(errorMiddleware);
 
 const port = process.env.PORT || 5000;
 app.listen(port, () => console.log(`Server running at port ${port}`));
+
+cron.schedule('5 9 * * *', async () => {
+  console.log('Running a task every minute.');
+  await generateFile()
+});

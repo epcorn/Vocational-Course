@@ -92,9 +92,32 @@ export const anylytics = async (req, res, next) => {
         const Total_Applicants = await Student.find();
         const admin = await Admin.findById(req.user.id);
         // Example aggregation pipeline
-        const finishedApplicants = await Student.aggregate([
-            { $match: { "details.paymentSS": { $ne: "" } } }
-        ]);
+        const finishedApplicants = await RegisteredStudent.find().populate('student');
+        // const finishedApplicants = await RegisteredStudent.aggregate([
+        //     { $match: { "enrolled": true } }, // Match only enrolled students
+        //     {
+        //         $lookup: {
+        //             from: "students", // Assuming "students" is the name of the collection for students
+        //             localField: "student",
+        //             foreignField: "_id",
+        //             as: "studentInfo" // You can change this to any name you prefer
+        //         }
+        //     },
+        //     { $unwind: "$studentInfo" }, // Unwind the studentInfo array
+        //     {
+        //         $project: {
+        //             email: 1,
+        //             enrolled: 1,
+        //             "studentInfo.details.firstName": 1, // Add specific fields from the studentInfo
+        //             "studentInfo.details.email": 1,
+        //             "studentInfo.details.phone": 1,
+        //             // Add more fields as needed
+        //             createdAt: 1,
+        //             updatedAt: 1
+        //         }
+        //     }
+        // ]);
+
         // Student.aggregate([
         //     // Match documents where donePersonal is true
         //     { $match: { "details.donePersonal": true } },

@@ -8,39 +8,70 @@ import { sendEmailForRegistration, sendEmailWithOtp } from "../services/emailSer
 export const studentRegister = async (req, res, next) => {
     try {
         const { form } = req.body;
-
-        if (!req.cookies.access_token) {
-            // Student registration process
+        const { access_token } = req.cookies;
+        if (!access_token) {
             const newStudent = await Student.create({ details: form });
             const token = generateAuthToken(newStudent._id);
             setAccessTokenCookie(res, token);
             res.status(201).json({ message: "Student created", student: newStudent });
         } else {
-            // Student update process
-            if (!req.cookies.access_token) {
-                return errorHandler(401, "Unauthorized");
-            }
-            const token = req.cookies.access_token;
+            const token = access_token;
             const studentId = verifyAuthToken(token);
 
             if (form.paymentSS !== "") {
-                //send email to stuednet
-                await sendEmailForRegistration(form.email, form.firstName, form.lastName, form.phone);
+                try {
+                    await sendEmailForRegistration(form.email, form.firstName, form.lastName, form.phone);
+                } catch (error) {
+                    // Handle email sending error
+                    console.error("Error sending email:", error);
+                }
             }
             const updatedStudent = await updateStudentDetails(studentId, form);
 
             if (!updatedStudent) {
                 res.clearCookie("access_token");
-                return res.status(404).json({ message: "Registration failed, please clear your cookies" });
+                return res.status(404).json({ message: "Registration failed, please try again" });
             }
-
 
             res.status(200).json({ message: "Student details updated successfully", student: updatedStudent });
         }
     } catch (error) {
+        // General error handling
+        console.error("Error in studentRegister:", error);
         next(error);
     }
 };
+
+export const finalRegister = async (req, res, next) =>{
+    try {
+        const { form } = req.body;
+        const { access_token } = req.cookies;
+        if (!access_token) {
+            const newStudent = await Student.create({ details: form });
+            const token = generateAuthToken(newStudent._id);
+            setAccessTokenCookie(res, token);
+            res.status(201).json({ message: "Student created", student: newStudent });
+        } else {
+            const token = access_token;
+            const studentId = verifyAuthToken(token);
+
+            const updatedStudent = await updateStudentDetails(studentId, form);
+
+            if (!updatedStudent) {
+                res.clearCookie("access_token");
+                return res.status(404).json({ message: "Registration failed, please try again" });
+            }
+            await sendEmailForRegistration(form.email, form.firstName, form.lastName, form.phone);
+
+            res.status(200).json({ message: "Student details updated successfully", student: updatedStudent });
+        }
+    } catch (error) {
+        // General error handling
+        console.error("Error in studentRegister:", error);
+        next(error);
+    }
+}
+
 
 export const login = async (req, res, next) => {
     const { email, password } = req.body;
@@ -161,7 +192,6 @@ const verifyAuthToken = (token) => {
 };
 
 const updateStudentDetails = async (studentId, form) => {
-    console.log(studentId);
     const stud = await Student.findById(studentId);
 
     if (!stud) {
