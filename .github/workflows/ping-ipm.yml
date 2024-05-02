@@ -16,7 +16,7 @@ jobs:
       - name: Ping Website
         run: |
           chmod +x ping-website.sh
-          ./ping-website.sh
+          ./ping-website.sh $WEBSITE_URL
         env:
           WEBSITE_URL: ${{ secrets.WEBSITE_URL }}
         

@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Set the URL of your website
-WEBSITE_URL="${WEBSITE_URL}"
-echo $WEBSITE_URL
+WEBSITE_URL=$1
+echo "URL: $WEBSITE_URL"
 
 # Ping the website
 PING_RESULT=$(curl --write-out '%{http_code}' --silent --output /dev/null "$WEBSITE_URL")
