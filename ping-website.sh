@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Set the URL of your website
-WEBSITE_URL=$1
+WEBSITE_URL="https://www.ipm.in-smark.com/"
 echo "URL: $WEBSITE_URL"
 
 # Ping the website
