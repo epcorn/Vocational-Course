@@ -18,4 +18,6 @@ jobs:
           chmod +x ping-website.sh
           ./ping-website.sh
         env:
-          WEBSITE_URL: https://your-website.com
+          WEBSITE_URL: ${{ secrets.WEBSITE_URL }}
+        
+        

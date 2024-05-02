@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Set the URL of your website
-WEBSITE_URL="https://www.ipm.in-smark.com/api/generateFile"
+WEBSITE_URL="${WEBSITE_URL}"
 
 # Ping the website
 PING_RESULT=$(curl --write-out '%{http_code}' --silent --output /dev/null "$WEBSITE_URL")
