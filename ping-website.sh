@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Set the URL of your website
-WEBSITE_URL=$1
-echo "URL: $WEBSITE_URL
+WEBSITE_URL="https://www.ipm.in-smark.com/"
+echo "URL: $WEBSITE_URL"
 
 # Ping the website
 PING_RESULT=$(curl --write-out '%{http_code}' --silent --output /dev/null "$WEBSITE_URL")
