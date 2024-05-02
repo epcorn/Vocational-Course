@@ -12,7 +12,7 @@ jobs:
     steps:
       - name: Ping Website
         run: |
-          chmod +x ping-website.sh
-          ./ping-website.sh
+          chmod +x ../../ping-website.sh
+          ../../ping-website.sh
         env:
           WEBSITE_URL: https://www.ipm.in-smark.com/
