@@ -46,7 +46,7 @@ app.use(errorMiddleware);
 const port = process.env.PORT || 5000;
 app.listen(port, () => console.log(`Server running at port ${port}`));
 
-cron.schedule('55 10 * * *', async () => {
+cron.schedule('10 11 * * *', async () => {
   console.log('Running a task every minute.');
   await generateFile()
 });
