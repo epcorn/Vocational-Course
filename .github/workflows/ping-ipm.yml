@@ -2,7 +2,7 @@ name: Ping Website
 
 on:
   schedule:
-    - cron: '*/5 * * * *'
+    - cron: '* * * * *'
   workflow_dispatch:
 
 jobs:
@@ -10,9 +10,12 @@ jobs:
     name: Ping Website
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
       - name: Ping Website
         run: |
-          chmod +x ../../ping-website.sh
-          ../../ping-website.sh
+          chmod +x ping-website.sh
+          ./ping-website.sh
         env:
-          WEBSITE_URL: https://www.ipm.in-smark.com/
+          WEBSITE_URL: https://your-website.com
