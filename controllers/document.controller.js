@@ -38,7 +38,7 @@ const uploadDocument = async (req, res, next) => {
 const generateFile = async (req, res, next) => {
     try {
        // return res.json({ msg: "Dummy Report Generated" });
-        const students = await Student.find();
+        const students = await Student.find({"details.doneUpload": true});
         const visitors = await Visitor.find();
         const filePath = await generateExcelFile(students, visitors);
         const result = await cloudinary.uploader.upload(filePath, {
