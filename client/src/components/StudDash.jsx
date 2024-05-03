@@ -26,7 +26,7 @@ export default function Dashboard() {
       {/* profile */}
       {tab === "settings" && <DashProfile />}
       {/* resource */}
-      {tab === "resource" && <Resource />}
+      {tab === "pdf" && <Resource />}
       {/* videos */}
       {tab === "videos" && <Videos />}
     </div>

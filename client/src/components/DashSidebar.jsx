@@ -2,6 +2,9 @@ import { Sidebar } from "flowbite-react";
 import { useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 import { HiArrowCircleRight, HiShoppingBag } from "react-icons/hi";
+import { BsFiletypePdf } from "react-icons/bs";
+import { MdOndemandVideo } from "react-icons/md";
+import { AiOutlineFilePpt } from "react-icons/ai";
 import { GiBookshelf } from "react-icons/gi";
 import { useEffect, useState } from "react";
 import { ToastContainer } from "react-toastify";
@@ -38,10 +41,10 @@ export default function DashSidebar() {
               </Sidebar.Item>
             </Link>
             <Sidebar.Collapse icon={HiShoppingBag} label="Resource">
-              <Link to="/dashboard/dash?tab=resource">
+              <Link to="/dashboard/dash?tab=pdf">
                 <Sidebar.Item
-                  active={tab === "resource"}
-                  icon={GiBookshelf}
+                  active={tab === "pdf"}
+                  icon={BsFiletypePdf}
                   labelColor="dark"
                   as="div"
                 >
@@ -51,7 +54,7 @@ export default function DashSidebar() {
               <Link to="/dashboard/dash?tab=videos">
                 <Sidebar.Item
                   active={tab === "videos"}
-                  icon={GiBookshelf}
+                  icon={MdOndemandVideo}
                   labelColor="dark"
                   as="div"
                 >
@@ -71,7 +74,7 @@ export default function DashSidebar() {
               <Link to="/dashboard/dash?tab=ppts">
                 <Sidebar.Item
                   active={tab === "ppts"}
-                  icon={GiBookshelf}
+                  icon={AiOutlineFilePpt}
                   labelColor="dark"
                   as="div"
                 >
