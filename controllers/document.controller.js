@@ -38,9 +38,10 @@ const uploadDocument = async (req, res, next) => {
 const generateFile = async (req, res, next) => {
     try {
        // return res.json({ msg: "Dummy Report Generated" });
-        const students = await Student.find({"details.doneUpload": true});
+        const uniqueEmailIdStudents = await getAllStudents();
+        const studentDoneTillUpload = uniqueEmailIdStudents.filter(stud => stud.details.doneUpload  )
         const visitors = await Visitor.find();
-        const filePath = await generateExcelFile(students, visitors);
+        const filePath = await generateExcelFile(uniqueEmailIdStudents, studentDoneTillUpload, visitors);
         const result = await cloudinary.uploader.upload(filePath, {
             use_filename: true,
             folder: "IPM",
@@ -70,5 +71,33 @@ const getLinks = async (req, res, next) => {
         next(error);
     }
 };
+
+const getAllStudents = async () => {
+    try {
+      
+      const students = await Student.find({});
+      const uniqueEmails = new Set();
+      const uniqueStudents = [];
+
+      for (const student of students) {
+        const email = student.details.email;
+        if (!uniqueEmails.has(email)) {
+            uniqueEmails.add(email);
+            uniqueStudents.push(student);
+        } else {
+            const index = uniqueStudents.findIndex(s => s.details.email === email);
+            if (student.details.doneUpload) {
+                if (!uniqueStudents[index].details.doneUpload) {
+                    uniqueStudents[index] = student;
+                }
+            }
+        }
+    }
+      return uniqueStudents;
+    } catch (err) {
+      console.error('Error fetching students:', err);
+      throw err;
+    }
+  };
 
 export { uploadDocument, generateFile, getLinks };
