@@ -72,7 +72,7 @@ const getLinks = async (req, res, next) => {
   try {
     const admin = await Admin.find();
     const { meritList, prospectus, resources } = admin[0];
-    const latestMeritList = await Student.find({ worthy: true }).limit(10);
+    const latestMeritList = await Student.find({ worthy: true });
     res.status(200).json({ meritList: latestMeritList, prospectus, resources });
   } catch (error) {
     next(error);
