@@ -1,5 +1,16 @@
 import express from "express";
-import { login, signout, signup, anylytics, demography, documentUpload, incProspectusViews, admitStudent, deleteStudent } from "../controllers/admin.controller.js";
+import {
+  login,
+  signout,
+  signup,
+  anylytics,
+  demography,
+  documentUpload,
+  incProspectusViews,
+  admitStudent,
+  deleteStudent,
+  meritList,
+} from "../controllers/admin.controller.js";
 import { verifyToken } from "../middleware/verifyToken.js";
 
 const router = express.Router();
@@ -13,6 +24,6 @@ router.get("/demography", verifyToken, demography);
 router.post("/documentUpload", verifyToken, documentUpload);
 router.post("/admitStudent/:studentId", verifyToken, admitStudent);
 router.get("/delStud/:id", verifyToken, deleteStudent);
-
+router.get("/merit/:id", verifyToken, meritList);
 
 export default router;

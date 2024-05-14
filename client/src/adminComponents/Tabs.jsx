@@ -151,6 +151,29 @@ export default function Tabs() {
       toast.error("Admiting student failed!");
     }
   };
+  const handleWorthy = async (id) => {
+    try {
+      setLoading(true);
+      const res = await axios.get(`/api/admins/merit/${id}`);
+      const updated = totalApplicants.map((item) => {
+        if (item._id !== id) {
+          return {
+            ...item,
+            [item.worthy]: true,
+            [item.details.donePayment]: "",
+          };
+        } else {
+          return item;
+        }
+      });
+      setTotalApplicants(updated);
+      setLoading(false);
+      toast.success(res.data.message);
+    } catch (error) {
+      setLoading(false);
+      toast.error("Adding student to merit list failed!");
+    }
+  };
 
   const generateReport = async () => {
     const res = await fetch("/api/generateFile");
@@ -425,27 +448,25 @@ export default function Tabs() {
         <div className="table-auto overflow-x-scroll  md:mx-auto p-3 scrollbar  scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500">
           <Table hoverable className=" shadow-md">
             <Table.Head>
-              <Table.HeadCell>Date created</Table.HeadCell>
+              <Table.HeadCell>fullname</Table.HeadCell>
               <Table.HeadCell>Email</Table.HeadCell>
               <Table.HeadCell>Phone</Table.HeadCell>
-              <Table.HeadCell>Caste</Table.HeadCell>
-              <Table.HeadCell>Admit</Table.HeadCell>
+              <Table.HeadCell>ID</Table.HeadCell>
+              <Table.HeadCell>Actions</Table.HeadCell>
             </Table.Head>
             {totalApplicants?.map((t) => (
               <Table.Body key={t._id} className="divide-y">
                 <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
                   <Table.Cell>
-                    {new Date(t.createdAt).toLocaleDateString()}
+                    {/* {new Date(t.createdAt).toLocaleDateString()} */}
+                    {t.details.firstName + " " + t.details.lastName}
                   </Table.Cell>
                   <Table.Cell>
-                    {t.details.email === "" ? "null" : t.details.email}
+                    {/* {t.details.caste === "" ? "null" : t.details.caste} */}
+                    {t.details.email}
                   </Table.Cell>
-                  <Table.Cell>
-                    {t.details.phone === "" ? "null" : t.details.phone}
-                  </Table.Cell>
-                  <Table.Cell>
-                    {t.details.caste === "" ? "null" : t.details.caste}
-                  </Table.Cell>
+                  <Table.Cell>{t.details.phone}</Table.Cell>
+                  <Table.Cell>{t._id}</Table.Cell>
                   <Table.Cell>
                     <Button
                       className={`bg-red-500 hover:bg-red-400 rounded-md p-1 shadow-md text-black w-full ${
@@ -466,6 +487,14 @@ export default function Tabs() {
                       onClick={() => handleDel(t._id)}
                     >
                       Delete
+                    </Button>
+                    <Button
+                      className={`bg-yellow-500 hover:bg-yellow-400 rounded-md p-1  m-2 shadow-md text-black w-full ${
+                        t.worthy ? "bg-green-400 hover:bg-green-300" : ""
+                      }`}
+                      onClick={() => handleWorthy(t._id)}
+                    >
+                      Add To merit list
                     </Button>
                   </Table.Cell>
                 </Table.Row>

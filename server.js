@@ -6,8 +6,13 @@ import path from "path";
 import cookeParser from "cookie-parser";
 import rootRouter from "./routes/index.js";
 import connectDB from "./config/mongoose.js";
-import { uploadDocument, generateFile, getLinks } from "./controllers/document.controller.js";
+import {
+  uploadDocument,
+  generateFile,
+  getLinks,
+} from "./controllers/document.controller.js";
 import errorMiddleware from "./middleware/errorMiddleware.js";
+import Student from "./models/student.model.js";
 
 dotenv.config();
 connectDB();
@@ -26,7 +31,6 @@ app.post("/api/documentUpload", uploadDocument);
 app.get("/api/generateFile", generateFile);
 app.get("/api/links", getLinks);
 
-
 if (process.env.NODE_ENV === "production") {
   const __dirname = path.resolve();
   app.use(express.static(path.join(__dirname, "/client/dist")));
@@ -42,7 +46,16 @@ if (process.env.NODE_ENV === "production") {
 //Error handling middleware
 app.use(errorMiddleware);
 
+// (async function () {
+//   console.log("Starting update!");
+//   try {
+//     const result = await Student.updateMany({}, { $set: { code: "" } });
+//     console.log("Documents updated:", result.modifiedCount);
+//   } catch (err) {
+//     console.log("Error updating documents:", err);
+//   }
+//   console.log("Update finished!");
+// })();
+
 const port = process.env.PORT || 5000;
 app.listen(port, () => console.log(`Server running at port ${port}`));
-
-

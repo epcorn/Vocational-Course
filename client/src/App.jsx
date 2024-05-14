@@ -20,22 +20,19 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import StudDash from "./components/StudDash";
 import StudentPrivateRoute from "./components/StudentPrivateRoute";
-
+import MeritList from "./components/MeritList";
 
 function App() {
   const Layout = () => {
-
     const [hideOverlay, setHideOverlay] = useState(() => {
       const visited = window.localStorage.getItem("visited");
-      return (visited ? false : true);
+      return visited ? false : true;
     });
 
     const [form, setForm] = useState(null);
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
     const emailInputRef = useRef(null);
-
-
 
     function validatePhone(field) {
       if (field.match(/^\d{10}/)) {
@@ -49,29 +46,24 @@ function App() {
       if (validatePhone(form.phone)) {
         try {
           // eslint-disable-next-line no-unused-vars
-          const res = await axios.post(
-            "/api/visitors/",
-            form
-          );
+          const res = await axios.post("/api/visitors/", form);
           window.localStorage.setItem("visited", true);
           setHideOverlay(false);
         } catch (error) {
           console.log(error);
           toast.error("There is some error, try again later");
         }
-
       } else {
         setError(true);
         setErrorMessage("Enter valid number!");
       }
-
     };
 
     const handleChange = (e) => {
       setError(false);
       setForm((prev) => ({
         ...prev,
-        [e.target.name]: e.target.value // Use square brackets to dynamically set the property name
+        [e.target.name]: e.target.value, // Use square brackets to dynamically set the property name
       }));
     };
 
@@ -84,10 +76,19 @@ function App() {
         </div>
         <Footer />
         {hideOverlay && (
-          <Modal show={hideOverlay} popup size="lg" initialFocus={emailInputRef} className="backdrop-filter backdrop-blur-lg" >
+          <Modal
+            show={hideOverlay}
+            popup
+            size="lg"
+            initialFocus={emailInputRef}
+            className="backdrop-filter backdrop-blur-lg"
+          >
             <Modal.Body>
               <ToastContainer position="top-center" autoClose={3000} />
-              <form className=" flex flex-col p-4  gap-4" onSubmit={handleSubmit}>
+              <form
+                className=" flex flex-col p-4  gap-4"
+                onSubmit={handleSubmit}
+              >
                 <div className="">
                   <Label value="Your email" />
                   <TextInput
@@ -107,7 +108,6 @@ function App() {
                     id="phone"
                     name="phone"
                     onChange={handleChange}
-
                   />
                 </div>
                 <button
@@ -124,9 +124,7 @@ function App() {
               </form>
             </Modal.Body>
           </Modal>
-
-        )
-        }
+        )}
       </>
     );
   };
@@ -147,6 +145,7 @@ function App() {
         <Route path="/" element={<Layout />}>
           <Route index path="/" element={<Home />} />,
           <Route path="admission" element={<Admission />} />
+          <Route path="meritList/:id" element={<MeritList />} />
           <Route path="login" element={<Login />} />
           <Route path="dashboard" element={<StudentPrivateRoute />}>
             <Route path="dash" element={<StudDash />} />
@@ -159,8 +158,6 @@ function App() {
           </Route>
         </Route>
       </>
-
-
     )
   );
 
