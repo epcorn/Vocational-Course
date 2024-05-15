@@ -100,8 +100,9 @@ export function Header() {
         heading={
           <div className="flex items-center justify-center gap-10">
             <span>Merit List</span>
-            <span className="text-red-600">
-              Please check you email for Passcode
+            <span className="text-red-400">
+              Please get the Passcode from the{" "}
+              <strong className="text-red-600">LATEST</strong> email only
             </span>
           </div>
         }
