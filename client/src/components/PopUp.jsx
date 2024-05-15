@@ -40,7 +40,7 @@ function PopUp({ setCode, code, ogCode, to, parentModel }) {
         <Modal.Header />
         <Modal.Body>
           <div className="text-center">
-            <Label htmlFor="code" value="Enter the security code" />
+            <Label htmlFor="code" value="Enter the Passcode" />
             <TextInput
               id="code"
               onChange={(e) => setCode(e.target.value)}

@@ -97,7 +97,14 @@ export function Header() {
       <CustomModal
         isOpen={meritModel}
         onClose={() => setMeritModel(!meritModel)}
-        heading="Merit List"
+        heading={
+          <div className="flex items-center justify-center gap-10">
+            <span>Merit List</span>
+            <span className="text-red-600">
+              Please check you email for Passcode
+            </span>
+          </div>
+        }
         size="7xl"
       >
         <div className=" overflow-x-auto ">

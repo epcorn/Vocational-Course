@@ -262,8 +262,8 @@ export const incProspectusViews = async (req, res, next) => {
   try {
     const adminId = process.env.ADMIN_DOC_ID;
     const updatedAdmin = await Admin.findOneAndUpdate(
-      { _id: adminId }, // Query for the admin by their ID
-      { $inc: { "prospectus.views": 1 } } // Use $inc to increment the views by 1
+      { _id: adminId },
+      { $inc: { "prospectus.views": 1 } }
     );
     return res.status(200).json();
   } catch (error) {
