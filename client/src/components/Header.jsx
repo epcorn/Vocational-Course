@@ -105,7 +105,7 @@ export function Header() {
             </span>
           </div>
         }
-        size="7xl"
+        size="3xl"
       >
         <div className=" overflow-x-auto ">
           <Table>
@@ -130,7 +130,7 @@ export function Header() {
                             &#127881;
                           </span>
                           <span className="text-gray-900 bold">
-                            successfully admitted
+                            Successfully Admitted
                           </span>
                           <span
                             className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200"
