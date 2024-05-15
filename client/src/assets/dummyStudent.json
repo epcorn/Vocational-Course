@@ -1,0 +1,20 @@
+{
+  "meritList": [
+    {
+      "_id": "3",
+      "details": {
+        "firstName": "Arjun",
+        "lastName": "Chatterjee",
+        "donePayment": true
+      }
+    },
+    {
+      "_id": "5",
+      "details": {
+        "firstName": "Soham",
+        "lastName": "Mukherjee",
+        "donePayment": true
+      }
+    }
+  ]
+}

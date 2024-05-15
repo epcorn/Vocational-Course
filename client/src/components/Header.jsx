@@ -9,6 +9,7 @@ import { useSelector } from "react-redux";
 import CustomModal from "./CustomModal";
 import { Table } from "flowbite-react";
 import PopUp from "./PopUp";
+import meritListData from "../../src/assets/dummyStudent.json";
 
 export function Header() {
   const [links, setLinks] = useState(null);
@@ -18,6 +19,7 @@ export function Header() {
   const [popUp, setPopUp] = useState(false);
   const [code, setCode] = useState("");
   const location = useLocation();
+  const { meritList } = meritListData;
 
   useEffect(() => {
     const fetchLinks = async () => {
@@ -116,6 +118,39 @@ export function Header() {
               <Table.HeadCell>Actions</Table.HeadCell>
             </Table.Head>
             <Table.Body>
+              {meritList.map((stud) => (
+                <Table.Row key={stud._id}>
+                  <Table.Cell>{stud.details.firstName}</Table.Cell>
+                  <Table.Cell>{stud.details.lastName}</Table.Cell>
+                  <Table.Cell>
+                    {stud.details.donePayment ? (
+                      <>
+                        <span
+                          role="img"
+                          aria-label="checkmark"
+                          className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200"
+                          style={{ fontSize: "30px" }}
+                        >
+                          &#127881;
+                        </span>
+                        <span className="text-gray-900 bold">
+                          Successfully Admitted
+                        </span>
+                        <span
+                          role="img"
+                          aria-label="checkmark"
+                          className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200"
+                          style={{ fontSize: "30px" }}
+                        >
+                          &#127881;
+                        </span>
+                      </>
+                    ) : (
+                      <span>Pending Payment</span>
+                    )}
+                  </Table.Cell>
+                </Table.Row>
+              ))}
               {links?.meritList.length > 0 &&
                 links.meritList.map((stud) => (
                   <Table.Row key={stud._id}>
