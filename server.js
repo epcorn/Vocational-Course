@@ -46,6 +46,7 @@ if (process.env.NODE_ENV === "production") {
 //Error handling middleware
 app.use(errorMiddleware);
 
+//Funtion to add new filds to the existing Schema models
 // (async function () {
 //   console.log("Starting update!");
 //   try {

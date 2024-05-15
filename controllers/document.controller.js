@@ -5,6 +5,7 @@ import { sendEmailWithAttachment } from "../services/emailService.js";
 import { generateExcelFile } from "../utils/excelUtils.js";
 import Admin from "../models/admin.model.js";
 import Visitor from "../models/visitor.model.js";
+import Payment from "../models/payment.model.js";
 
 const uploadDocument = async (req, res, next) => {
   try {
@@ -42,11 +43,26 @@ const generateFile = async (req, res, next) => {
     const studentDoneTillUpload = uniqueEmailIdStudents.filter(
       (stud) => stud.details.doneUpload
     );
+    const meritList = await Student.find({ worthy: true });
+    const updatedMeritList = await Promise.all(
+      meritList.map(async (stud) => {
+        if (stud.details.donePayment) {
+          const payment = await Payment.findOne({ studentId: stud._id });
+          if (payment) {
+            stud.utr = payment.utr;
+          }
+        } else {
+          stud.utr = "";
+        }
+        return stud;
+      })
+    );
     const visitors = await Visitor.find();
     const filePath = await generateExcelFile(
       uniqueEmailIdStudents,
       studentDoneTillUpload,
-      visitors
+      visitors,
+      updatedMeritList
     );
     const result = await cloudinary.uploader.upload(filePath, {
       use_filename: true,
@@ -78,6 +94,7 @@ const getLinks = async (req, res, next) => {
   }
 };
 
+//filters students on unique email and doneUpload flag
 const getAllStudents = async () => {
   try {
     const students = await Student.find({});

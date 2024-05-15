@@ -3,7 +3,8 @@ import exceljs from "exceljs";
 const generateExcelFile = async (
   uniqueEmailIdStudents,
   studentDoneTillUpload,
-  visitors
+  visitors,
+  meritList
 ) => {
   try {
     const workbook = new exceljs.Workbook();
@@ -199,6 +200,26 @@ const generateExcelFile = async (
         createdAt: visitor.createdAt,
         email: visitor.email,
         phone: visitor.phone,
+      });
+    });
+
+    let meritListWorksheet = workbook.addWorksheet("Merit List");
+    meritListWorksheet.columns = [
+      { header: "Email", key: "email" },
+      { header: "Payment SS", key: "paymentSS" },
+      { header: "UTR", key: "utr" },
+      { header: "Passcode", key: "code" },
+      { header: "Name", key: "firstName" },
+      { header: "Lastname", key: "lastName" },
+    ];
+    meritList.forEach((student) => {
+      meritListWorksheet.addRow({
+        email: student.details.email,
+        paymentSS: student.details.paymentSS,
+        utr: student.utr,
+        code: student.code,
+        firstName: student.details.firstName,
+        lastName: student.details.lastName,
       });
     });
 
