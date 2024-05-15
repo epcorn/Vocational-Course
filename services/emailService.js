@@ -89,7 +89,7 @@ export const sendEmailWithCode = async (emailAddress, code, id) => {
           <p>To proceed with the admission process, please follow the steps below:</p>
           <ol>
             <li><strong>Verification of Details</strong>: Visit the following link to verify your details: <a href=${
-              "http://localhost:3000/meritList/" + id
+              "https://www.ipm.in-smark.com/meritList/" + id
             }>Verification Portal</a></li>
             <li>
               <strong>Payment</strong>: Complete the payment via bank transfer using the details provided below.
