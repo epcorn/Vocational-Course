@@ -121,7 +121,7 @@ export const sendEmailWithCode = async (emailAddress, code, id) => {
 
     return true;
   } catch (error) {
-    console.error("Error sending email:", error);
+    console.error(`Error sending email to: ${emailAddress}`, error);
     return false;
   }
 };

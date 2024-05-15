@@ -139,7 +139,6 @@ export const paymentDetails = async (req, res, next) => {
       },
       { new: true }
     );
-    console.log(updatedStudent);
     res
       .status(200)
       .json({ message: "Your payment details has been registered!" });
