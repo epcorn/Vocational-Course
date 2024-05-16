@@ -103,8 +103,9 @@ export function Header() {
           <div className="flex items-center justify-center gap-10">
             <span>Merit List</span>
             <span className="text-red-400">
-              Please get the Passcode from the{" "}
-              <strong className="text-red-600">LATEST</strong> email only
+              Please use the <strong className="text-red-600">LATEST</strong>{" "}
+              passcode from the email dated{" "}
+              <strong className="text-red-600">15/05/2024</strong>
             </span>
           </div>
         }

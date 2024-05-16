@@ -42,7 +42,8 @@ function PopUp({ setCode, code, ogCode, to, parentModel }) {
           <div className="text-center">
             <Label htmlFor="code">
               Enter the Passcode from the{" "}
-              <strong className="text-red-600">LATEST</strong> email
+              <strong className="text-red-600">LATEST</strong> email, dated
+              15/05/2024
             </Label>
             <TextInput
               id="code"
