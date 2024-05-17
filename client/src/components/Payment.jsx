@@ -78,6 +78,7 @@ const Payment = ({ id, onClose }) => {
             name="accountName"
             value={formData.accountName}
             onChange={handleChange}
+            autoComplete="off"
             className="mt-1 p-2 border border-gray-300 rounded-md w-full"
           />
         </div>
@@ -94,6 +95,7 @@ const Payment = ({ id, onClose }) => {
             name="bankName"
             value={formData.bankName}
             onChange={handleChange}
+            autoComplete="off"
             className="mt-1 p-2 border border-gray-300 rounded-md w-full"
           />
         </div>
@@ -109,6 +111,7 @@ const Payment = ({ id, onClose }) => {
               value="bank"
               checked={formData.paymentType === "bank"}
               onChange={handleChange}
+              autoComplete="off"
               className="mr-2"
             />
             <label htmlFor="paymentTypeBank" className="mr-4">
@@ -121,6 +124,7 @@ const Payment = ({ id, onClose }) => {
               value="upi"
               checked={formData.paymentType === "upi"}
               onChange={handleChange}
+              autoComplete="off"
               className="mr-2"
             />
             <label htmlFor="paymentTypeUPI">UPI</label>
@@ -137,6 +141,7 @@ const Payment = ({ id, onClose }) => {
             type="text"
             id="utr"
             name="utr"
+            autoComplete="off"
             value={formData.utr}
             onChange={handleChange}
             className="mt-1 p-2 border border-gray-300 rounded-md w-full"
@@ -153,6 +158,7 @@ const Payment = ({ id, onClose }) => {
             type="file"
             id="file"
             name="file"
+            autoComplete="off"
             onChange={handleChange}
             className="mt-1 p-2 border border-gray-300 rounded-md w-full"
           />

@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import CustomModal from "./CustomModal";
 import Payment from "./Payment";
 
-const InfoTable = ({ name, email, id, address }) => {
+const InfoTable = ({ name, email, id, address, payment }) => {
   const [open, setOpen] = useState(false);
   return (
     <div className="overflow-x-auto w-full ">
@@ -20,12 +20,33 @@ const InfoTable = ({ name, email, id, address }) => {
             <Table.Cell>{email}</Table.Cell>
             <Table.Cell>{address}</Table.Cell>
             <Table.Cell>
-              <Button
-                gradientDuoTone="tealToLime"
-                onClick={() => setOpen(true)}
-              >
-                Upload Payment Details
-              </Button>
+              {payment ? (
+                <>
+                  <span
+                    className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200"
+                    style={{ fontSize: "30px" }}
+                  >
+                    &#127881;
+                  </span>
+                  <span className="text-gray-900 bold">
+                    Successfully Admitted
+                  </span>
+                  <span
+                    className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200"
+                    style={{ fontSize: "30px" }}
+                  >
+                    &#127881;
+                  </span>
+                </>
+              ) : (
+                <Button
+                  gradientDuoTone="tealToLime"
+                  onClick={() => setOpen(true)}
+                  disabled={payment ? true : false}
+                >
+                  Upload Payment Details
+                </Button>
+              )}
             </Table.Cell>
           </Table.Row>
         </Table.Body>

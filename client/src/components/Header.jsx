@@ -30,7 +30,7 @@ export function Header() {
       }
     };
     fetchLinks();
-  }, []);
+  });
   async function handleClick() {
     await fetch("/api/admins/incProspectusViews");
   }

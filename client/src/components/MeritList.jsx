@@ -15,6 +15,7 @@ function MeritList() {
     };
     fetchLinks();
   }, [id]);
+  console.log(student);
   return (
     <div className="max-w-6xl mx-auto p-3 flex flex-row flex-wrap gap-8 py-7">
       <div className="bg-yellow-100 border-l-4 border-yellow-500 text-gray-800 p-4 rounded-md shadow-md">
@@ -77,6 +78,7 @@ function MeritList() {
           name={student.details?.firstName}
           email={student.details?.email}
           address={student.details?.address}
+          payment={student.details?.donePayment}
           id={student?._id}
         />
       </h1>
