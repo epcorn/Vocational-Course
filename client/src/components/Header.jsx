@@ -147,7 +147,14 @@ export function Header() {
                         </span>
                       </>
                     ) : (
-                      <span>Pending Payment</span>
+                      <PopUp
+                        click={popUp}
+                        code={code}
+                        setCode={setCode}
+                        ogCode={stud.code}
+                        to={`meritList/${stud._id}`}
+                        parentModel={() => setMeritModel(!meritModel)}
+                      />
                     )}
                   </Table.Cell>
                 </Table.Row>
