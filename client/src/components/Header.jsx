@@ -20,7 +20,6 @@ export function Header() {
   const [code, setCode] = useState("");
   const location = useLocation();
   const { meritList } = meritListData;
-
   useEffect(() => {
     const fetchLinks = async () => {
       const res = await fetch("/api/links");
@@ -30,7 +29,7 @@ export function Header() {
       }
     };
     fetchLinks();
-  }, []);
+  }, [location.pathname]);
   async function handleClick() {
     await fetch("/api/admins/incProspectusViews");
   }
