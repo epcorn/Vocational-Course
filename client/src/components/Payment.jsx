@@ -33,6 +33,10 @@ const Payment = ({ id, onClose }) => {
       formDataToSend.append("file", formData.file);
     }
 
+    if (!formData.utr && !formData.file) {
+      toast.error("Please provide either UTR or Bank Receipt/Screenshot");
+      return;
+    }
     const postData = async () => {
       const res = await fetch(`/api/students/${id}`, {
         method: "POST",

@@ -126,6 +126,131 @@ export const sendEmailWithCode = async (emailAddress, code, id) => {
   }
 };
 
+export const reminderEmail = async (emailAddress, code, id) => {
+  try {
+    let defaultClient = brevo.ApiClient.instance;
+
+    let apiKey = defaultClient.authentications["api-key"];
+    apiKey.apiKey = process.env.BREVO_KEY;
+
+    let apiInstance = new brevo.TransactionalEmailsApi();
+
+    let sendSmtpEmail = new brevo.SendSmtpEmail();
+
+    sendSmtpEmail.sender = {
+      name: "EPCORN",
+      email: process.env.EA_EMAIL,
+    };
+
+    sendSmtpEmail.to = [{ email: emailAddress }];
+
+    sendSmtpEmail.htmlContent = `
+      <html>
+        <head>
+          <style>
+            body {
+              font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+              font-size: 16px;
+              line-height: 1.6;
+              color: #333;
+              background-color: #f8f9fa;
+              padding: 20px;
+            }
+            h2 {
+              color: #007bff;
+              font-size: 28px;
+              margin-bottom: 20px;
+              text-align: center;
+            }
+            ol {
+              margin-left: 30px;
+              list-style-type: decimal;
+            }
+            li {
+              margin-bottom: 15px;
+            }
+            a {
+              color: #007bff;
+              text-decoration: none;
+              font-weight: bold;
+            }
+            a:hover {
+              text-decoration: underline;
+            }
+            .passcode {
+              font-weight: bold;
+              color: #dc3545;
+              font-size: 18px;
+            }
+            hr {
+              border: none;
+              border-top: 2px solid #ccc;
+              margin: 30px 0;
+            }
+            .contact {
+              background-color: #f1f1f1;
+              padding: 20px;
+              border-radius: 5px;
+              box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+          </style>
+        </head>
+        <body>
+        <h2>Reminder: Complete Your Admission Process</h2>
+          <p>Dear Student,</p>
+          <p>We hope this email finds you well. This is a reminder regarding the pending payment for securing your admission to the "Integrated Pest Management (IPM) course" at our esteemed institution.</p>
+          <p>We understand that this course presents a valuable opportunity for your personal and professional growth, and we encourage you to take advantage of it. As communicated earlier, the benefits of this course include:</p>
+          <ol>
+            <li>Open up avenues for social upliftment.</li>
+            <li>Bring more interest in vocational formats, which are increasingly in demand.</li>
+            <li>Further skill development, equipping you with practical knowledge and expertise.</li>
+            <li>Open up new horizons for new generations, providing a platform for personal and professional growth.</li>
+            <li>Improve employability, increasing your chances of securing rewarding job opportunities.</li>
+            <li>Allow better acceptance in overseas employment, broadening your career prospects globally.</li>
+            <li>Offer recession-proof employment opportunities, ensuring a stable and secure future.</li>
+          </ol>
+          <p>To proceed with the admission process, please follow these steps:</p>
+          <ol>
+            <li><strong>Verification of Details</strong>: Visit the Verification Portal <a href="${
+              "https://www.ipm.in-smark.com/meritList/" + id
+            }">Verification Portal</a> to verify your details.</li>
+            <li>
+              <strong>Payment</strong>: Complete the payment via bank transfer using the following details:
+              <br />
+              <strong>Bank Name</strong> – Bank of Baroda
+              <br />
+              <strong>IFSC Code</strong> – BARB0VJSERA
+              <br />
+              <strong>Bank Account Number</strong> - 779101000000654
+            </li>
+            <li><strong>Payment Proof</strong>: Upload the proof of payment to <a href="#">Link</a> to finalize your admission.</li>
+          </ol>
+          <p>We strongly encourage you to seize this valuable opportunity and complete the payment process at your earliest convenience. By doing so, you will not only secure your admission but also take a significant step towards a promising future in the field of Integrated Pest Management.</p>
+          <p>We are providing you with a secure key passcode which you may need if you wish to access to update the payments from the website directly.</p>
+          <p><span class="passcode">Passcode: ${code}</span></p>
+          <hr>
+          <div class="contact">
+            <p><strong>For any queries, please contact the college on the following details:</strong></p>
+            <p><strong>Dr. Sanjay Sarkar – 9836689926</strong><br>
+            <a href="mailto:sanjay@seramporecollege.ac.in">sanjay@seramporecollege.ac.in</a></p>
+            <p><strong>Dr. Subarna Ghosh – 8910434568</strong><br>
+            <a href="mailto:Subarnag86@gmail.com">Subarnag86@gmail.com</a></p>
+          </div>
+        </body>
+      </html>
+    `;
+
+    sendSmtpEmail.subject = "Final reminder for IPM course";
+
+    await apiInstance.sendTransacEmail(sendSmtpEmail);
+
+    return true;
+  } catch (error) {
+    console.error(`Error sending email to: ${emailAddress}`, error);
+    return false;
+  }
+};
+
 export const sendEmailWithLogin = async (obj) => {
   const { email, phone } = obj;
   try {
