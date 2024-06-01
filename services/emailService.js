@@ -251,6 +251,120 @@ export const reminderEmail = async (emailAddress, code, id) => {
   }
 };
 
+export const reFillThePaymentForm = async (emailAddress, code, id) => {
+  try {
+    let defaultClient = brevo.ApiClient.instance;
+
+    let apiKey = defaultClient.authentications["api-key"];
+    apiKey.apiKey = process.env.BREVO_KEY;
+
+    let apiInstance = new brevo.TransactionalEmailsApi();
+
+    let sendSmtpEmail = new brevo.SendSmtpEmail();
+
+    sendSmtpEmail.sender = {
+      name: "EPCORN",
+      email: process.env.EA_EMAIL,
+    };
+
+    sendSmtpEmail.to = [{ email: emailAddress }];
+
+    sendSmtpEmail.htmlContent = `
+    <html>
+  <head>
+  <style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f8f9fa;
+    padding: 20px;
+  }
+  h2 {
+    color: #007bff;
+    font-size: 28px;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  ol {
+    margin-left: 30px;
+    list-style-type: decimal;
+  }
+  li {
+    margin-bottom: 15px;
+  }
+  a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: bold;
+  }
+  a:hover {
+    text-decoration: underline;
+  }
+  .passcode {
+    font-weight: bold;
+    color: #dc3545;
+    font-size: 18px;
+  }
+  hr {
+    border: none;
+    border-top: 2px solid #ccc;
+    margin: 30px 0;
+  }
+  .contact {
+    background-color: #f1f1f1;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+</style>
+  </head>
+  <body>
+    <h2>Important: Upload Payment Proof for Admission</h2>
+    <p>Dear Student,</p>
+    <p>It has come to our attention that you have not yet uploaded the payment proof for securing your admission to the "Integrated Pest Management (IPM) course" at our institution.</p>
+    <p>To complete the admission process, please follow these steps:</p>
+    <ol>
+      <li>
+        <strong>Payment Proof</strong>: Upload the proof of payment (UTR or Bank Receipt/Screenshot) to
+        <a href="${
+          "https://www.ipm.in-smark.com/meritList/" + id
+        }">Payment Portal</a>.
+      </li>
+    </ol>
+    <p>Providing the payment proof is mandatory to finalize your admission. We kindly request you to complete this step at your earliest convenience.</p>
+    <p>If you have already uploaded the payment proof, please disregard this message.</p>
+    <p>We are providing you with a secure key passcode which you may need if you wish to access to update the payments from the website directly.</p>
+    <p><span class="passcode">Passcode: ${code}</span></p>
+    <hr />
+    <div class="contact">
+      <p><strong>For any queries, please contact the college on the following details:</strong></p>
+      <p>
+        <strong>Dr. Sanjay Sarkar – 9836689926</strong
+        ><br />
+        <a href="mailto:sanjay@seramporecollege.ac.in">sanjay@seramporecollege.ac.in</a>
+      </p>
+      <p>
+        <strong>Dr. Subarna Ghosh – 8910434568</strong><br />
+        <a href="mailto:Subarnag86@gmail.com">Subarnag86@gmail.com</a>
+      </p>
+    </div>
+  </body>
+</html>
+    `;
+
+    sendSmtpEmail.subject = "Upload Payment Proof for Admission";
+
+    await apiInstance.sendTransacEmail(sendSmtpEmail);
+
+    return true;
+  } catch (error) {
+    console.error(`Error sending email to: ${emailAddress}`, error);
+    return false;
+  }
+};
+
 export const sendEmailWithLogin = async (obj) => {
   const { email, phone } = obj;
   try {

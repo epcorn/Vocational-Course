@@ -13,7 +13,10 @@ import {
 } from "./controllers/document.controller.js";
 import errorMiddleware from "./middleware/errorMiddleware.js";
 import Student from "./models/student.model.js";
-import { reminderEmail } from "./services/emailService.js";
+import {
+  reFillThePaymentForm,
+  reminderEmail,
+} from "./services/emailService.js";
 
 dotenv.config();
 connectDB();
@@ -65,24 +68,28 @@ app.use(errorMiddleware);
 //   try {
 //     const worthyStudents = await Student.find({
 //       worthy: true,
-//       "details.donePayment": false,
+//       "details.donePayment": true,
+//       "details.email": "sagar2002bhattacharya@gmail.com",
 //     });
-//     if (worthyStudents.length > 0) {
-//       for (const student of worthyStudents) {
-//         const emailAddress = student.details.email;
-//         const code = student.code; // Assuming the student document has a 'code' field
-//         const id = student._id; // Assuming the student document has an '_id' field
-//         const emailSent = await reminderEmail(emailAddress, code, id);
-
-//         if (emailSent) {
-//           console.log(`Email sent successfully to ${emailAddress}`);
-//         } else {
-//           console.log(`Failed to send email to ${emailAddress}`);
-//         }
-//       }
-//     } else {
-//       console.log("No worthy students found");
-//     }
+//     console.log(worthyStudents);
+//     // if ((worthyStudents.length = 1)) {
+//     //   for (const student of worthyStudents) {
+//     //     const emailAddress = student.details.email;
+//     //     const code = student.code; // Assuming the student document has a 'code' field
+//     //     const id = student._id; // Assuming the student document has an '_id' field
+//     //     let emailSent;
+//     //     if (emailAddress === "exteam.epcorn@gmail.com") {
+//     //       emailSent = await reFillThePaymentForm(emailAddress, code, id);
+//     //     }
+//     //     if (emailSent) {
+//     //       console.log(`Email sent successfully to ${emailAddress}`);
+//     //     } else {
+//     //       console.log(`Failed to send email to ${emailAddress}`);
+//     //     }
+//     //   }
+//     // } else {
+//     //   console.log("No worthy students found");
+//     // }
 //   } catch (error) {
 //     console.log(error);
 //   }
