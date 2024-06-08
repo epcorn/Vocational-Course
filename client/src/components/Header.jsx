@@ -101,8 +101,7 @@ export function Header() {
             <span>Merit List</span>
             <span className="text-red-400">
               Please use the <strong className="text-red-600">LATEST</strong>{" "}
-              passcode from the email dated{" "}
-              <strong className="text-red-600">15/05/2024</strong>
+              passcode from the email
             </span>
           </div>
         }

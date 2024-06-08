@@ -345,6 +345,7 @@ export const meritList = async (req, res, next) => {
           "details.donePayment": false,
           "details.paymentSS": "",
           code: aCode,
+          listNumber: 2,
         },
       },
       { new: true }

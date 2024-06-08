@@ -50,6 +50,38 @@ if (process.env.NODE_ENV === "production") {
 //Error handling middleware
 app.use(errorMiddleware);
 
+//funtion to
+// (async () => {
+//   try {
+//     // Find all students whose worthy is true
+//     const worthyStudents = await Student.find({ worthy: true });
+
+//     // Set listNumber to 1 for worthy students
+//     const updateWorthyPromises = worthyStudents.map(async (student) => {
+//       student.listNumber = 1;
+//       return student.save();
+//     });
+
+//     // Wait for all worthy student updates to complete
+//     await Promise.all(updateWorthyPromises);
+
+//     // Find all students whose worthy is false (or not set)
+//     const nonWorthyStudents = await Student.find({ worthy: { $ne: true } });
+
+//     // Set listNumber to 0 (default) for non-worthy students
+//     const updateNonWorthyPromises = nonWorthyStudents.map(async (student) => {
+//       student.listNumber = 0;
+//       return student.save();
+//     });
+
+//     // Wait for all non-worthy student updates to complete
+//     await Promise.all(updateNonWorthyPromises);
+
+//     console.log("Student listNumbers updated successfully.");
+//   } catch (err) {
+//     console.error("Error updating student listNumbers:", err);
+//   }
+// });
 //Funtion to add new filds to the existing Schema models
 // (async function () {
 //   console.log("Starting update!");
@@ -60,39 +92,38 @@ app.use(errorMiddleware);
 //     console.log("Error updating documents:", err);
 //   }
 //   console.log("Update finished!");
-// })();
+// });
 
 //reminder funtion
-// (async function () {
-//   console.log("Starting emailing process");
-//   try {
-//     const worthyStudents = await Student.find({
-//       worthy: true,
-//       "details.donePayment": true,
-//       "details.email": "sagar2002bhattacharya@gmail.com",
-//     });
-//     console.log(worthyStudents);
-//     // if ((worthyStudents.length = 1)) {
-//     //   for (const student of worthyStudents) {
-//     //     const emailAddress = student.details.email;
-//     //     const code = student.code; // Assuming the student document has a 'code' field
-//     //     const id = student._id; // Assuming the student document has an '_id' field
-//     //     let emailSent;
-//     //     if (emailAddress === "exteam.epcorn@gmail.com") {
-//     //       emailSent = await reFillThePaymentForm(emailAddress, code, id);
-//     //     }
-//     //     if (emailSent) {
-//     //       console.log(`Email sent successfully to ${emailAddress}`);
-//     //     } else {
-//     //       console.log(`Failed to send email to ${emailAddress}`);
-//     //     }
-//     //   }
-//     // } else {
-//     //   console.log("No worthy students found");
-//     // }
-//   } catch (error) {
-//     console.log(error);
-//   }
-// })();
+
+(async function () {
+  //console.log("Starting emailing process");
+  try {
+    const worthyStudents = await Student.find({
+      worthy: true,
+      listNumber: 2,
+      "details.donePayment": false,
+    });
+    if (worthyStudents.length > 0) {
+      for (const student of worthyStudents) {
+        const emailAddress = student.details.email;
+        const code = student.code; // Assuming the student document has a 'code' field
+        const id = student._id; // Assuming the student document has an '_id' field
+        let emailSent = await reminderEmail(emailAddress, code, id);
+
+        if (emailSent) {
+          console.log(`Email sent successfully to ${emailAddress}`);
+        } else {
+          console.log(`Failed to send email to ${emailAddress}`);
+        }
+        // console.log(`Email: ${emailAddress}  Code: ${code} Id: ${id}`);
+      }
+    } else {
+      console.log("No worthy students found");
+    }
+  } catch (error) {
+    console.log(error);
+  }
+})();
 const port = process.env.PORT || 5000;
 app.listen(port, () => console.log(`Server running at port ${port}`));

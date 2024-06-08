@@ -4,7 +4,8 @@ const generateExcelFile = async (
   uniqueEmailIdStudents,
   studentDoneTillUpload,
   visitors,
-  meritList
+  meritList1,
+  meritList2
 ) => {
   try {
     const workbook = new exceljs.Workbook();
@@ -12,6 +13,8 @@ const generateExcelFile = async (
 
     worksheet.columns = [
       { header: "Created At", key: "createdAt" },
+      { header: "ID", key: "_id" },
+      { header: "InMeritList", key: "worthy" },
       { header: "First Name", key: "firstName" },
       { header: "Middle Name", key: "middleName" },
       { header: "Last Name", key: "lastName" },
@@ -56,6 +59,8 @@ const generateExcelFile = async (
     uniqueEmailIdStudents.forEach((student) => {
       worksheet.addRow({
         createdAt: student.createdAt,
+        _id: student._id,
+        worthy: student.worthy,
         firstName: student.details.firstName,
         middleName: student.details.middleName,
         lastName: student.details.lastName,
@@ -203,7 +208,7 @@ const generateExcelFile = async (
       });
     });
 
-    let meritListWorksheet = workbook.addWorksheet("Merit List");
+    let meritListWorksheet = workbook.addWorksheet("Merit List 1");
     meritListWorksheet.columns = [
       { header: "Email", key: "email" },
       { header: "Payment SS", key: "paymentSS" },
@@ -212,8 +217,28 @@ const generateExcelFile = async (
       { header: "Name", key: "firstName" },
       { header: "Lastname", key: "lastName" },
     ];
-    meritList.forEach((student) => {
+    meritList1.forEach((student) => {
       meritListWorksheet.addRow({
+        email: student.details.email,
+        paymentSS: student.details.paymentSS,
+        utr: student.utr,
+        code: student.code,
+        firstName: student.details.firstName,
+        lastName: student.details.lastName,
+      });
+    });
+
+    let meritListWorksheet2 = workbook.addWorksheet("Merit List 2");
+    meritListWorksheet2.columns = [
+      { header: "Email", key: "email" },
+      { header: "Payment SS", key: "paymentSS" },
+      { header: "UTR", key: "utr" },
+      { header: "Passcode", key: "code" },
+      { header: "Name", key: "firstName" },
+      { header: "Lastname", key: "lastName" },
+    ];
+    meritList2.forEach((student) => {
+      meritListWorksheet2.addRow({
         email: student.details.email,
         paymentSS: student.details.paymentSS,
         utr: student.utr,

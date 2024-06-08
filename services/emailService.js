@@ -15,10 +15,10 @@ export const sendEmailWithAttachment = async (attachmentUrl) => {
       email: process.env.EA_EMAIL,
     };
     sendSmtpEmail.to = [
-      { email: process.env.STQ_EMAIL },
+      //{ email: process.env.STQ_EMAIL },
       // { email: process.env.EA_EMAIL },
       { email: process.env.NO_REPLY_EMAIL },
-      { email: process.env.SALES_EMAIL },
+      //{ email: process.env.SALES_EMAIL },
       // { email: process.env.COLLEGE_EMAIL },
     ];
     sendSmtpEmail.templateId = 9;
@@ -82,9 +82,9 @@ export const sendEmailWithCode = async (emailAddress, code, id) => {
     sendSmtpEmail.htmlContent = `
       <html>
         <body>
-          <h2>Announcement: 1st Merit List for IPM Course!</h2>
+          <h2>Announcement: 2nd Merit List for IPM Course!</h2>
           <p>Dear Prospective Students,</p>
-          <p>We are glad to announce our 1st Merit List for the "Integrated Pest Management (IPM) course at Serampore College".</p>
+          <p>We are glad to announce our 2nd Merit List for the "Integrated Pest Management (IPM) course at Serampore College".</p>
           <p>Congratulations to you, we request you to complete the payment of your fees & secure you admission.</p>
           <p>To proceed with the admission process, please follow the steps below:</p>
           <ol>
@@ -115,10 +115,10 @@ export const sendEmailWithCode = async (emailAddress, code, id) => {
       </html>
     `;
 
-    sendSmtpEmail.subject = "1st Merit List for IPM Course - Serampore College";
+    sendSmtpEmail.subject = "2nd Merit List for IPM Course - Serampore College";
 
-    await apiInstance.sendTransacEmail(sendSmtpEmail);
-
+    const heghey = await apiInstance.sendTransacEmail(sendSmtpEmail);
+    console.log(heghey);
     return true;
   } catch (error) {
     console.error(`Error sending email to: ${emailAddress}`, error);
@@ -240,7 +240,7 @@ export const reminderEmail = async (emailAddress, code, id) => {
       </html>
     `;
 
-    sendSmtpEmail.subject = "Final reminder for IPM course";
+    sendSmtpEmail.subject = "Reminder for IPM course";
 
     await apiInstance.sendTransacEmail(sendSmtpEmail);
 

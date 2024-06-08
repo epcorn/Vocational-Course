@@ -40,12 +40,27 @@ const generateFile = async (req, res, next) => {
   try {
     const donePaymests = await Student.find({ "details.donePayment": true });
     const uniqueEmailIdStudents = await getAllStudents();
+    //const uniqueDMeritList = await getNonWorthyStudentsWithUniqueEmails();
     const studentDoneTillUpload = uniqueEmailIdStudents.filter(
       (stud) => stud.details.doneUpload
     );
-    const meritList = await Student.find({ worthy: true });
-    const updatedMeritList = await Promise.all(
-      meritList.map(async (stud) => {
+    const meritListOne = await Student.find({ worthy: true, listNumber: 1 });
+    const meritListTwo = await Student.find({ worthy: true, listNumber: 2 });
+    const updatedMeritListOne = await Promise.all(
+      meritListOne.map(async (stud) => {
+        if (stud.details.donePayment) {
+          const payment = await Payment.findOne({ studentId: stud._id });
+          if (payment) {
+            stud.utr = payment.utr;
+          }
+        } else {
+          stud.utr = "";
+        }
+        return stud;
+      })
+    );
+    const updatedMeritListTwo = await Promise.all(
+      meritListTwo.map(async (stud) => {
         if (stud.details.donePayment) {
           const payment = await Payment.findOne({ studentId: stud._id });
           if (payment) {
@@ -62,7 +77,8 @@ const generateFile = async (req, res, next) => {
       uniqueEmailIdStudents,
       studentDoneTillUpload,
       visitors,
-      updatedMeritList
+      updatedMeritListOne,
+      updatedMeritListTwo
     );
     const result = await cloudinary.uploader.upload(filePath, {
       use_filename: true,
@@ -118,6 +134,35 @@ const getAllStudents = async () => {
       }
     }
     return uniqueStudents;
+  } catch (err) {
+    console.error("Error fetching students:", err);
+    throw err;
+  }
+};
+//filters students on
+const getNonWorthyStudentsWithUniqueEmails = async () => {
+  try {
+    const worthyStudents = await Student.find({
+      worthy: true,
+    });
+    const worthyEmails = new Set();
+    const theList = [];
+    for (const student of worthyStudents) {
+      const email = student.details.email;
+      if (!worthyEmails.has(email)) {
+        worthyEmails.add(email);
+      }
+    }
+    const students = await Student.find();
+    const uniqueEmails = new Set();
+    for (const student of students) {
+      const email = student.details.email;
+      if (!worthyEmails.has(email) && !uniqueEmails.has(email)) {
+        uniqueEmails.add(email);
+        theList.push(student);
+      }
+    }
+    return theList;
   } catch (err) {
     console.error("Error fetching students:", err);
     throw err;

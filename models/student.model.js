@@ -10,6 +10,10 @@ const studentSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
+    listNumber: {
+      type: Number,
+      default: 0,
+    },
     details: { type: Object },
   },
   { timestamps: true }
