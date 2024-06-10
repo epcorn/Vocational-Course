@@ -96,34 +96,34 @@ app.use(errorMiddleware);
 
 //reminder funtion
 
-(async function () {
-  //console.log("Starting emailing process");
-  try {
-    const worthyStudents = await Student.find({
-      worthy: true,
-      listNumber: 2,
-      "details.donePayment": false,
-    });
-    if (worthyStudents.length > 0) {
-      for (const student of worthyStudents) {
-        const emailAddress = student.details.email;
-        const code = student.code; // Assuming the student document has a 'code' field
-        const id = student._id; // Assuming the student document has an '_id' field
-        let emailSent = await reminderEmail(emailAddress, code, id);
+// (async function () {
+//   //console.log("Starting emailing process");
+//   try {
+//     const worthyStudents = await Student.find({
+//       worthy: true,
+//       listNumber: 2,
+//       "details.donePayment": false,
+//     });
+//     if (worthyStudents.length > 0) {
+//       for (const student of worthyStudents) {
+//         const emailAddress = student.details.email;
+//         const code = student.code; // Assuming the student document has a 'code' field
+//         const id = student._id; // Assuming the student document has an '_id' field
+//         let emailSent = await reminderEmail(emailAddress, code, id);
 
-        if (emailSent) {
-          console.log(`Email sent successfully to ${emailAddress}`);
-        } else {
-          console.log(`Failed to send email to ${emailAddress}`);
-        }
-        // console.log(`Email: ${emailAddress}  Code: ${code} Id: ${id}`);
-      }
-    } else {
-      console.log("No worthy students found");
-    }
-  } catch (error) {
-    console.log(error);
-  }
-})();
+//         if (emailSent) {
+//           console.log(`Email sent successfully to ${emailAddress}`);
+//         } else {
+//           console.log(`Failed to send email to ${emailAddress}`);
+//         }
+//         // console.log(`Email: ${emailAddress}  Code: ${code} Id: ${id}`);
+//       }
+//     } else {
+//       console.log("No worthy students found");
+//     }
+//   } catch (error) {
+//     console.log(error);
+//   }
+// });
 const port = process.env.PORT || 5000;
 app.listen(port, () => console.log(`Server running at port ${port}`));
