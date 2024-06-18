@@ -11,13 +11,13 @@ export const sendEmailWithAttachment = async (attachmentUrl) => {
 
     sendSmtpEmail.sender = {
       name: "EPCORN",
-      //email: process.env.NO_REPLY_EMAIL,
-      email: process.env.EA_EMAIL,
+      email: process.env.NO_REPLY_EMAIL,
+      //email: process.env.EA_EMAIL,
     };
     sendSmtpEmail.to = [
-      //{ email: process.env.STQ_EMAIL },
-      // { email: process.env.EA_EMAIL },
-      { email: process.env.NO_REPLY_EMAIL },
+      { email: process.env.STQ_EMAIL },
+      { email: process.env.EA_EMAIL },
+      //{ email: process.env.NO_REPLY_EMAIL },
       //{ email: process.env.SALES_EMAIL },
       // { email: process.env.COLLEGE_EMAIL },
     ];
@@ -449,5 +449,86 @@ export const sendEmailForRegistration = async (
   } catch (error) {
     console.error("Error sending email:", error);
     return false; // Failed to send email
+  }
+};
+
+export const docReminderEmail = async (emailTo) => {
+  try {
+    let defaultClient = brevo.ApiClient.instance;
+
+    let apiKey = defaultClient.authentications["api-key"];
+    apiKey.apiKey = process.env.BREVO_KEY;
+
+    let apiInstance = new brevo.TransactionalEmailsApi();
+
+    let sendSmtpEmail = new brevo.SendSmtpEmail();
+
+    sendSmtpEmail.sender = {
+      name: "EPCORN",
+      email: process.env.NO_REPLY_EMAIL,
+    };
+
+    sendSmtpEmail.to = [{ email: emailTo }];
+
+    sendSmtpEmail.htmlContent = `
+      <html>
+        <head>
+          <style>
+            body {
+              font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+              font-size: 16px;
+              line-height: 1.6;
+              color: #333;
+              background-color: #f8f9fa;
+              padding: 20px;
+            }
+            h2 {
+              color: #007bff;
+              font-size: 28px;
+              margin-bottom: 20px;
+              text-align: center;
+            }
+            ol {
+              margin-left: 30px;
+              list-style-type: decimal;
+            }
+            li {
+              margin-bottom: 15px;
+            }
+            strong {
+              font-weight: bold;
+            }
+          </style>
+        </head>
+        <body>
+          <h2>Reminder: Physical Verification of Credentials on 15th June 2024 at Dept. of Zoology, Serampore College</h2>
+          <p>Dear Admitted Students,</p>
+          <p>We hope this email finds you well and excited about the upcoming academic journey at Serampore College. As you prepare to embark on this new chapter, we want to ensure a smooth transition for you.</p>
+          <p>We would like to remind you of the physical verification of your credentials scheduled for <strong>15th June 2024, Saturday</strong>, at the Department of Zoology, Serampore College, starting at <strong>10:30 AM</strong>. It is imperative that you attend this verification process to complete your admission formalities.</p>
+          <p>Please ensure you bring the following documents in both original and photocopy format:</p>
+          <ol>
+            <li>Passport-sized photograph</li>
+            <li>Aadhar Card</li>
+            <li>Caste certificate (If mentioned in the admission form)</li>
+            <li>10th-grade mark sheet</li>
+            <li>12th-grade mark sheet</li>
+            <li>Vocational certification (If mentioned in the admission form)</li>
+            <li>Payment receipt</li>
+          </ol>
+          <p>Kindly organize these documents in advance to expedite the verification process.</p>
+          <p>We look forward to welcoming you to Serampore College and wish you all the best for your academic endeavors.</p>
+        </body>
+      </html>
+    `;
+
+    sendSmtpEmail.subject =
+      "Reminder: Physical Verification of Credentials on 15th June 2024 at Dept. of Zoology, Serampore College";
+
+    await apiInstance.sendTransacEmail(sendSmtpEmail);
+
+    return true;
+  } catch (error) {
+    console.error(`Error sending email to: ${emailAddress}`, error);
+    return false;
   }
 };

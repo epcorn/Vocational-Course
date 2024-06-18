@@ -39,7 +39,8 @@ const uploadDocument = async (req, res, next) => {
 const generateFile = async (req, res, next) => {
   try {
     const donePaymests = await Student.find({ "details.donePayment": true });
-    const uniqueEmailIdStudents = await getAllStudents();
+    //const uniqueEmailIdStudents = await getAllStudents();
+    const uniqueEmailIdStudents = await Student.find({});
     //const uniqueDMeritList = await getNonWorthyStudentsWithUniqueEmails();
     const studentDoneTillUpload = uniqueEmailIdStudents.filter(
       (stud) => stud.details.doneUpload
