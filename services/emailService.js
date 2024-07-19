@@ -18,7 +18,7 @@ export const sendEmailWithAttachment = async (attachmentUrl) => {
       { email: process.env.STQ_EMAIL },
       { email: process.env.EA_EMAIL },
       //{ email: process.env.NO_REPLY_EMAIL },
-      //{ email: process.env.SALES_EMAIL },
+      { email: process.env.SALES_EMAIL },
       // { email: process.env.COLLEGE_EMAIL },
     ];
     sendSmtpEmail.templateId = 9;
