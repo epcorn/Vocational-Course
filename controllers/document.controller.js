@@ -89,12 +89,9 @@ const generateFile = async (req, res, next) => {
     });
 
     fs.unlinkSync(filePath);
-    const status = await sendEmailWithAttachment(result.secure_url);
-    if (status) {
-      return res.status(200).json({ msg: "File Generated" });
-    } else {
-      return res.json({ msg: "file generation failed" });
-    }
+    await sendEmailWithAttachment(result.secure_url);
+    res.status(200).json({msg: "File geneated"})
+
   } catch (error) {
     next(error);
   }

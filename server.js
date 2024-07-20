@@ -12,8 +12,6 @@ import {
   getLinks,
 } from "./controllers/document.controller.js";
 import errorMiddleware from "./middleware/errorMiddleware.js";
-import { docReminderEmail } from "./services/emailService.js";
-import Student from "./models/student.model.js";
 
 dotenv.config();
 connectDB();

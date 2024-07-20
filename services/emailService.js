@@ -4,7 +4,7 @@ export const sendEmailWithAttachment = async (attachmentUrl) => {
   try {
     let defaultClient = brevo.ApiClient.instance;
     let apiKey = defaultClient.authentications["api-key"];
-    apiKey.apiKey = process.env.BREVO_KEY;
+    apiKey.apiKey = process.env.BREVO_KEY_V3;
 
     let apiInstance = new brevo.TransactionalEmailsApi();
     let sendSmtpEmail = new brevo.SendSmtpEmail();
@@ -28,10 +28,8 @@ export const sendEmailWithAttachment = async (attachmentUrl) => {
 
     await apiInstance.sendTransacEmail(sendSmtpEmail);
 
-    return true; // Email sent successfully
   } catch (error) {
-    console.error("Error sending email:", error);
-    return false; // Failed to send email
+    throw new Error("Failed to send transactional email");
   }
 };
 
@@ -39,7 +37,7 @@ export const sendEmailWithOtp = async (emailAddress, otp) => {
   try {
     let defaultClient = brevo.ApiClient.instance;
     let apiKey = defaultClient.authentications["api-key"];
-    apiKey.apiKey = process.env.BREVO_KEY;
+    apiKey.apiKey = process.env.BREVO_KEY_V3;
 
     let apiInstance = new brevo.TransactionalEmailsApi();
     let sendSmtpEmail = new brevo.SendSmtpEmail();
@@ -54,10 +52,8 @@ export const sendEmailWithOtp = async (emailAddress, otp) => {
 
     await apiInstance.sendTransacEmail(sendSmtpEmail);
 
-    return true; // Email sent successfully
   } catch (error) {
-    console.error("Error sending email:", error);
-    return false; // Failed to send email
+    throw new Error("Failed to send transactional email");
   }
 };
 
@@ -66,7 +62,7 @@ export const sendEmailWithCode = async (emailAddress, code, id) => {
     let defaultClient = brevo.ApiClient.instance;
 
     let apiKey = defaultClient.authentications["api-key"];
-    apiKey.apiKey = process.env.BREVO_KEY;
+    apiKey.apiKey = process.env.BREVO_KEY_V3;
 
     let apiInstance = new brevo.TransactionalEmailsApi();
 
@@ -117,12 +113,10 @@ export const sendEmailWithCode = async (emailAddress, code, id) => {
 
     sendSmtpEmail.subject = "2nd Merit List for IPM Course - Serampore College";
 
-    const heghey = await apiInstance.sendTransacEmail(sendSmtpEmail);
-    console.log(heghey);
-    return true;
+    await apiInstance.sendTransacEmail(sendSmtpEmail);
+
   } catch (error) {
-    console.error(`Error sending email to: ${emailAddress}`, error);
-    return false;
+    throw new Error("Failed to send transactional email");
   }
 };
 
@@ -131,7 +125,7 @@ export const reminderEmail = async (emailAddress, code, id) => {
     let defaultClient = brevo.ApiClient.instance;
 
     let apiKey = defaultClient.authentications["api-key"];
-    apiKey.apiKey = process.env.BREVO_KEY;
+    apiKey.apiKey = process.env.BREVO_KEY_V3;
 
     let apiInstance = new brevo.TransactionalEmailsApi();
 
@@ -243,11 +237,8 @@ export const reminderEmail = async (emailAddress, code, id) => {
     sendSmtpEmail.subject = "Reminder for IPM course";
 
     await apiInstance.sendTransacEmail(sendSmtpEmail);
-
-    return true;
   } catch (error) {
-    console.error(`Error sending email to: ${emailAddress}`, error);
-    return false;
+    throw new Error("Failed to send transactional email");
   }
 };
 
@@ -256,7 +247,7 @@ export const reFillThePaymentForm = async (emailAddress, code, id) => {
     let defaultClient = brevo.ApiClient.instance;
 
     let apiKey = defaultClient.authentications["api-key"];
-    apiKey.apiKey = process.env.BREVO_KEY;
+    apiKey.apiKey = process.env.BREVO_KEY_V3;
 
     let apiInstance = new brevo.TransactionalEmailsApi();
 
@@ -358,10 +349,8 @@ export const reFillThePaymentForm = async (emailAddress, code, id) => {
 
     await apiInstance.sendTransacEmail(sendSmtpEmail);
 
-    return true;
   } catch (error) {
-    console.error(`Error sending email to: ${emailAddress}`, error);
-    return false;
+    throw new Error("Failed to send transactional email");
   }
 };
 
@@ -370,7 +359,7 @@ export const sendEmailWithLogin = async (obj) => {
   try {
     let defaultClient = brevo.ApiClient.instance;
     let apiKey = defaultClient.authentications["api-key"];
-    apiKey.apiKey = process.env.BREVO_KEY;
+    apiKey.apiKey = process.env.BREVO_KEY_V3;
 
     let apiInstance = new brevo.TransactionalEmailsApi();
     let sendSmtpEmail = new brevo.SendSmtpEmail();
@@ -390,8 +379,7 @@ export const sendEmailWithLogin = async (obj) => {
 
     return true; // Email sent successfully
   } catch (error) {
-    console.error(`Error sending login details: ${error}`);
-    return false;
+    throw new Error("Failed to send transactional email");
   }
 };
 
@@ -404,7 +392,7 @@ export const sendEmailForRegistration = async (
   try {
     let defaultClient = brevo.ApiClient.instance;
     let apiKey = defaultClient.authentications["api-key"];
-    apiKey.apiKey = process.env.BREVO_KEY;
+    apiKey.apiKey = process.env.BREVO_KEY_V3;
 
     let apiInstance = new brevo.TransactionalEmailsApi();
     let sendSmtpEmail = new brevo.SendSmtpEmail();
@@ -444,11 +432,8 @@ export const sendEmailForRegistration = async (
     sendSmtpEmail.subject = "Welcome to “Integrated Pest Management” Course.";
 
     await apiInstance.sendTransacEmail(sendSmtpEmail);
-
-    return true; // Email sent successfully
   } catch (error) {
-    console.error("Error sending email:", error);
-    return false; // Failed to send email
+    throw new Error("Failed to send transactional email");
   }
 };
 
@@ -457,7 +442,7 @@ export const docReminderEmail = async (emailTo) => {
     let defaultClient = brevo.ApiClient.instance;
 
     let apiKey = defaultClient.authentications["api-key"];
-    apiKey.apiKey = process.env.BREVO_KEY;
+    apiKey.apiKey = process.env.BREVO_KEY_V3;
 
     let apiInstance = new brevo.TransactionalEmailsApi();
 
@@ -526,9 +511,7 @@ export const docReminderEmail = async (emailTo) => {
 
     await apiInstance.sendTransacEmail(sendSmtpEmail);
 
-    return true;
   } catch (error) {
-    console.error(`Error sending email to: ${emailAddress}`, error);
-    return false;
+    throw new Error("Failed to send transactional email");
   }
 };
